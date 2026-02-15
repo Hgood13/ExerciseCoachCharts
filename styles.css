@@ -38,7 +38,7 @@ h2 {
   display: contents;
 }
 
-/* Bold any row by adding the `bold` class to the row wrapper */
+/* Bold any rows content by adding the `bold` class to the row wrapper */
 .grid .row.bold input {
   font-weight: 700;
 }
