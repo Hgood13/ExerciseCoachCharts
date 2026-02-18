@@ -49,15 +49,20 @@ h2 {
 
 /* ---------- BOLD COLUMN/ROW BORDERS ---------- */
 
-/* Bold the right border of the first column (separates labels from data) */
-/* .grid .row input:nth-child(2) {
+/* Bold the right border of the first column in every row (separates labels from data) */
+.grid .row input:nth-child(1n) {
   border-right: 3px solid #000;
-} */
+}
 
 /* Bold the bottom border of every 5th row (e.g., row 5, 10, 15) */
-/* .grid .row:nth-of-type(5n) input {
+.grid .row:nth-of-type(2n+7) input {
   border-bottom: 3px solid #000;
-} */
+}
+
+/* Bold the bottom border of the 3 row */
+.grid .row:nth-of-type(3) input {
+  border-bottom: 3px solid #000;
+}
 
 /* Tip: Adjust nth-child(1) to any column number, 5n to any row interval, 
    and 3px to any thickness or #000 to any color */
