@@ -1,0 +1,73 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #eaeaea;
+  color: #121212;
+  padding: 20px;
+}
+
+h2 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+/* ---------- GRID ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(16, 80px); /* column width */
+  grid-template-rows: repeat(16, 40px);    /* row height */
+  border: 1px solid #444;
+}
+
+/* ---------- CELLS ---------- */
+.grid input {
+  border: 1px solid #444;
+  background: #eaeaea;
+  color: #1e1e1e;
+  text-align: center;
+  font-size: 14px;
+}
+
+.grid input:focus {
+  outline: none;
+  background: #dcdcdc;
+}
+
+/* Row wrapper allows targeting entire rows. display:contents keeps inputs as grid items */
+.grid .row {
+  display: contents;
+}
+
+.grid .row.wide-cells input {
+  grid-column: span 2;
+}
+
+/* Bold any rows content by adding the `bold` class to the row wrapper */
+.grid .row.bold input {
+  font-weight: 700;
+}
+
+/* ---------- BOLD COLUMN/ROW BORDERS ---------- */
+
+/* Bold the right border of the first column in every row (separates labels from data) */
+.grid .row input:nth-child(1n) {
+  border-right: 3px solid #000;
+}
+
+/* Bold the bottom border of every 2 rows starting at the 6th row */
+.grid .row:nth-of-type(2n+6) input {
+  border-bottom: 3px solid #000;
+}
+
+/* Bold the bottom border of the 3 row */
+.grid .row:nth-of-type(3) input {
+  border-bottom: 3px solid #000;
+}
+
+/* Bold the bottom border of the 4th row */
+.grid .row:nth-of-type(4) input {
+  border-bottom: 3px solid #000;
+}
+
+/* Tip: Adjust nth-child(1) to any column number, 5n to any row interval, 
+   and 3px to any thickness or #000 to any color */

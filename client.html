@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Client Workout</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1 id="clientName">Client Name</h1>
+
+    <!-- 
+      MVP NOTE:
+      This table mirrors a paper workout chart.
+      Inputs make it editable.
+    -->
+    <table class="workout-chart">
+      <thead>
+        <tr>
+          <th>Exercise</th>
+          <th>Sets</th>
+          <th>Reps</th>
+          <th>Weight</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Simple fixed rows for MVP -->
+        <tr>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+        </tr>
+        <tr>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+        </tr>
+        <tr>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+          <td><input /></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button id="saveWorkout">Save Workout</button>
+
+    <p id="saveStatus"></p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
