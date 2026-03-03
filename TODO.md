@@ -3,29 +3,13 @@
 ## Priority Tasks (Critical Path)
 
 ### 1. Finalize Login Page
-- [x] Form validation (required fields)
-- [x] Redirect to clients page on submit
-- [x] Error message display for incorrect credentials
-- [x] Style polish complete
-- [x] Add header with TEC logo
-- [x] Add motivational images (the_exercise_coach_workout)
 
 ### 2. Build Client Selection Page (clients.html)
-- [x] Display list of all clients from app.js data
-- [x] Create clickable client cards/links
-- [x] Style to match Exercise Coach theme
-- [x] Link to individual client pages
-- [x] Add header with logo placeholder
-- [x] Create images folder for logos and supporting images
-- [x] Implement TEC logo in header
-- [x] Add motivation section with strength_changes_everything image
+- [ ] New Client Tab
 
 ### 3. Build Client Workout Chart Page (client.html)
 - [x] Get client ID from URL parameter
 - [x] Display client name
-- [x] Create fixed workout chart table
-- [x] Make chart cells editable (contenteditable or input fields)
-- [x] Add header with logo and professional styling
 - [x] Add "Back to Clients" navigation button
 - [x] Improved save status messaging
 
