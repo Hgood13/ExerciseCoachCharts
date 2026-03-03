@@ -22,29 +22,39 @@
     This is mock authentication.
     The goal is to demonstrate flow, not security.
   -->
-  <div class="container login-container">
-    <h1>Coach Sign In</h1>
+  <div class="login-wrapper">
+    <!-- Left Image -->
+    <div class="login-image-left">
+      <img src="images/The_gym.jpg" alt="The Exercise Coach Gym" class="login-side-image" />
+    </div>
 
-    <div id="errorMessage" class="error-message" style="display: none;"></div>
+    <!-- Login Form -->
+    <div class="login-center">
+      <div class="container login-container">
+        <h1>Coach Sign In</h1>
 
-    <form id="loginForm">
-      <label>
-        Username
-        <input type="text" id="username" required />
-      </label>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
 
-      <label>
-        Password
-        <input type="password" id="password" required />
-      </label>
+        <form id="loginForm">
+          <label>
+            Username
+            <input type="text" id="username" required />
+          </label>
 
-      <button type="submit">Sign In</button>
-    </form>
-  </div>
+          <label>
+            Password
+            <input type="password" id="password" required />
+          </label>
 
-  <!-- Motivational Section -->
-  <div class="login-motivational">
-    <img src="images/the_exercise_coach_workout.jpg" alt="Exercise Coach Training Session" class="motivational-image-large" />
+          <button type="submit">Sign In</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Image -->
+    <div class="login-image-right">
+      <img src="images/the_exercise_coach_workout.jpg" alt="Exercise Coach Training Session" class="login-side-image" />
+    </div>
   </div>
 
   <script src="app.js"></script>

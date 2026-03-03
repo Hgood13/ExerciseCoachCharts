@@ -272,6 +272,64 @@ li a:hover {
   margin-bottom: 60px;
 }
 
+/* Login Page Layout */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.login-center {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-image-left,
+.login-image-right {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-side-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 500px;
+  object-fit: cover;
+}
+
+/* Responsive - Stack on smaller screens */
+@media (max-width: 1024px) {
+  .login-wrapper {
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  .login-image-left,
+  .login-image-right {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .login-center {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .login-side-image {
+    max-height: 400px;
+  }
+}
+
 /* Button Styling */
 .btn-primary {
   padding: 14px 32px;
