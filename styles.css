@@ -376,6 +376,56 @@ li a:hover {
   margin-bottom: 24px;
   display: flex;
   gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-primary {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(247, 147, 44, 0.3);
+  display: inline-block;
+  line-height: 1.5;
+  height: 48px;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(247, 147, 44, 0.4);
+  background: linear-gradient(135deg, #E68A1F 0%, #D47A0F 100%);
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 14px 32px;
+  background: white;
+  color: #F7932C;
+  border: 2px solid #F7932C;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin: 0;
+  line-height: 1.5;
+  height: 48px;
+  vertical-align: middle;
+}
+
+.btn-secondary:hover {
+  background: #FFF9F5;
+  border-color: #E68A1F;
+  color: #E68A1F;
 }
 
 .save-status {
