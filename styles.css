@@ -65,14 +65,14 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #2c5282;
-  box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+  border-color: #F7932C;
+  box-shadow: 0 0 0 3px rgba(247, 147, 44, 0.1);
 }
 
 button {
   padding: 14px 32px;
   margin-top: 28px;
-  background: linear-gradient(135deg, #2c5282 0%, #1a3a52 100%);
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -80,18 +80,18 @@ button {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(44, 82, 130, 0.2);
+  box-shadow: 0 4px 12px rgba(247, 147, 44, 0.3);
 }
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(44, 82, 130, 0.3);
-  background: linear-gradient(135deg, #1a3a52 0%, #0f1f2e 100%);
+  box-shadow: 0 6px 20px rgba(247, 147, 44, 0.4);
+  background: linear-gradient(135deg, #E68A1F 0%, #D47A0F 100%);
 }
 
 button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(44, 82, 130, 0.2);
+  box-shadow: 0 2px 8px rgba(247, 147, 44, 0.3);
 }
 
 .error-message {
@@ -133,9 +133,9 @@ li a {
 }
 
 li a:hover {
-  background: #f8f9fa;
-  border-color: #2c5282;
-  box-shadow: 0 6px 16px rgba(44, 82, 130, 0.15);
+  background: #fff9f5;
+  border-color: #F7932C;
+  box-shadow: 0 6px 16px rgba(247, 147, 44, 0.15);
   transform: translateY(-2px);
 }
 
@@ -181,7 +181,7 @@ li a:hover {
 
 /* Header Styling */
 .header {
-  background: linear-gradient(135deg, #2c5282 0%, #1a3a52 100%);
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
   color: white;
   padding: 32px 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -202,9 +202,9 @@ li a:hover {
 }
 
 .logo {
-  max-width: 100px;
+  max-width: 400px;
   width: 100%;
-  height: 60px;
+  height: 240px;
   display: block;
   background: white;
   padding: 8px;
@@ -333,7 +333,7 @@ li a:hover {
 /* Button Styling */
 .btn-primary {
   padding: 14px 32px;
-  background: linear-gradient(135deg, #2c5282 0%, #1a3a52 100%);
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -341,21 +341,21 @@ li a:hover {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(44, 82, 130, 0.2);
+  box-shadow: 0 4px 12px rgba(247, 147, 44, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(44, 82, 130, 0.3);
-  background: linear-gradient(135deg, #1a3a52 0%, #0f1f2e 100%);
+  box-shadow: 0 6px 20px rgba(247, 147, 44, 0.4);
+  background: linear-gradient(135deg, #E68A1F 0%, #D47A0F 100%);
 }
 
 .btn-secondary {
   display: inline-block;
   padding: 14px 32px;
   background: white;
-  color: #2c5282;
-  border: 2px solid #2c5282;
+  color: #F7932C;
+  border: 2px solid #F7932C;
   border-radius: 6px;
   font-size: 16px;
   font-weight: 600;
@@ -366,9 +366,9 @@ li a:hover {
 }
 
 .btn-secondary:hover {
-  background: #f8f9fa;
-  border-color: #1a3a52;
-  color: #1a3a52;
+  background: #FFF9F5;
+  border-color: #E68A1F;
+  color: #E68A1F;
 }
 
 .button-group {
