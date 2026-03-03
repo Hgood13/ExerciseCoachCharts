@@ -100,6 +100,7 @@ if (clientList) {
    CLIENT CHART LOGIC
 -------------------------------- */
 const clientNameEl = document.getElementById("clientName");
+const clientNameHeaderEl = document.getElementById("clientNameHeader");
 const saveButton = document.getElementById("saveWorkout");
 const saveStatus = document.getElementById("saveStatus");
 
@@ -108,7 +109,12 @@ if (clientNameEl) {
   const clientId = Number(params.get("id"));
 
   const client = clients.find(c => c.id === clientId);
-  clientNameEl.textContent = client ? client.name : "Client";
+  const clientName = client ? client.name : "Client";
+  
+  clientNameEl.textContent = clientName;
+  if (clientNameHeaderEl) {
+    clientNameHeaderEl.textContent = clientName;
+  }
 
   saveButton.addEventListener("click", () => {
     // MVP: just simulate a save

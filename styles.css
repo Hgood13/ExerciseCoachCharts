@@ -139,45 +139,7 @@ li a:hover {
   transform: translateY(-2px);
 }
 
-.workout-chart {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 32px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.workout-chart th {
-  background: linear-gradient(135deg, #2c5282 0%, #1a3a52 100%);
-  color: white;
-  padding: 16px;
-  text-align: left;
-  font-weight: 600;
-  border: none;
-}
-
-.workout-chart td {
-  border-bottom: 1px solid #e0e6ed;
-  padding: 14px 16px;
-  background: white;
-}
-
-.workout-chart tr:last-child td {
-  border-bottom: none;
-}
-
-.workout-chart tr:hover td {
-  background: #f8f9fa;
-}
-
-.workout-chart input {
-  width: 100%;
-  border: 1px solid #e0e6ed;
-  padding: 8px 10px;
-  border-radius: 4px;
-  margin: 0;
-}
+/* Old table styles - replaced by grid layout */
 
 /* Header Styling */
 .header {
@@ -441,4 +403,85 @@ li a:hover {
 
 .save-status.show {
   display: block;
+}
+
+/* ---------- WORKOUT GRID STYLING ---------- */
+.workout-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 12px 0;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #F7932C;
+}
+
+.workout-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 80px);
+  grid-template-rows: auto;
+  border: 2px solid #2c3e50;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  background: white;
+}
+
+/* Grid input styling */
+.workout-grid input {
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #2c3e50;
+  text-align: center;
+  font-size: 13px;
+  padding: 6px;
+  height: 40px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.workout-grid input:focus {
+  outline: none;
+  background: #FFF9F5;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 2px rgba(247, 147, 44, 0.1);
+}
+
+.workout-grid input[readonly] {
+  background: #f0f0f0;
+  font-weight: 600;
+  cursor: default;
+}
+
+/* Grid row wrapper - display:contents keeps inputs as grid items */
+.workout-grid .grid-row {
+  display: contents;
+}
+
+/* Wide cells span 2 columns */
+.workout-grid .grid-row.wide-cells input {
+  grid-column: span 2;
+}
+
+/* Bold content in certain rows */
+.workout-grid .grid-row.bold input {
+  font-weight: 700;
+}
+
+/* Bold right border on first column (separates labels from data) */
+.workout-grid .grid-row input:nth-child(1n) {
+  border-right: 3px solid #2c3e50;
+}
+
+/* Bold bottom borders on specific rows */
+.workout-grid .grid-row:nth-of-type(3) input {
+  border-bottom: 3px solid #2c3e50;
+}
+
+.workout-grid .grid-row:nth-of-type(4) input {
+  border-bottom: 3px solid #2c3e50;
+}
+
+.workout-grid .grid-row:nth-of-type(2n+6) input {
+  border-bottom: 3px solid #2c3e50;
 }

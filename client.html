@@ -23,46 +23,89 @@
       <p class="subtitle">Update workout information and save progress</p>
     </div>
 
+    <!-- Workout Grid Header -->
+    <div class="workout-header">
+      <span>Workout Record</span>
+      <span id="clientNameHeader">Client Name</span>
+    </div>
+
     <!-- 
       MVP NOTE:
-      This table mirrors a paper workout chart.
-      Inputs make it editable.
+      This grid mirrors a paper workout chart.
+      Inputs make it editable with specific bolding patterns.
     -->
-    <table class="workout-chart">
-      <thead>
-        <tr>
-          <th>Exercise</th>
-          <th>Sets</th>
-          <th>Reps</th>
-          <th>Weight</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Simple fixed rows for MVP -->
-        <tr>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-        </tr>
-        <tr>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-        </tr>
-        <tr>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-          <td><input /></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="workout-grid">
+      <!-- Row 1: Date -->
+      <div class="grid-row wide-cells">
+        <input readonly value="Date"><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Row 2: Trainer -->
+      <div class="grid-row wide-cells">
+        <input readonly value="Trainer"><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Row 3: Routine -->
+      <div class="grid-row wide-cells bold">
+        <input readonly value="Routine"><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Row 4: Exercise Headers -->
+      <div class="grid-row bold">
+        <input readonly value="A"><input readonly value="B"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Rows 5-16: Data rows -->
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input><input><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+    </div>
 
     <div class="button-group">
       <a href="clients.html" class="btn-secondary">Back to Clients</a>
