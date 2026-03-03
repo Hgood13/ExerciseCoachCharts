@@ -7,12 +7,22 @@
 </head>
 <body>
 
+  <!-- Header with Logo -->
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="images/TEC_logo.svg" alt="The Exercise Coach" class="logo" />
+      </div>
+      <h1 class="header-title">The Exercise Coach</h1>
+    </div>
+  </div>
+
   <!-- 
     MVP NOTE:
     This is mock authentication.
     The goal is to demonstrate flow, not security.
   -->
-  <div class="container">
+  <div class="container login-container">
     <h1>Coach Sign In</h1>
 
     <div id="errorMessage" class="error-message" style="display: none;"></div>
@@ -30,6 +40,11 @@
 
       <button type="submit">Sign In</button>
     </form>
+  </div>
+
+  <!-- Motivational Section -->
+  <div class="login-motivational">
+    <img src="images/the_exercise_coach_workout.jpg" alt="Exercise Coach Training Session" class="motivational-image-large" />
   </div>
 
   <script src="app.js"></script>

@@ -7,8 +7,21 @@
 </head>
 <body>
 
+  <!-- Header with Logo -->
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="images/TEC_logo.svg" alt="The Exercise Coach" class="logo" />
+      </div>
+      <h1 class="header-title">Coach Dashboard</h1>
+    </div>
+  </div>
+
   <div class="container">
-    <h1>Clients</h1>
+    <div class="page-header">
+      <h2>Select a Client</h2>
+      <p class="subtitle">Choose a client to view and update their workout chart</p>
+    </div>
 
     <!-- 
       MVP NOTE:
@@ -18,6 +31,11 @@
     <ul id="clientList">
       <!-- Populated by JavaScript -->
     </ul>
+
+    <!-- Motivational Image Section -->
+    <div class="motivational-section">
+      <img src="images/strength_changes_everything.jpg" alt="Strength Changes Everything" class="motivational-image" />
+    </div>
   </div>
 
   <script src="app.js"></script>

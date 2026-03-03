@@ -76,6 +76,12 @@ if (clientNameEl) {
 
   saveButton.addEventListener("click", () => {
     // MVP: just simulate a save
-    saveStatus.textContent = "Workout saved successfully.";
+    saveStatus.textContent = "Workout saved successfully!";
+    saveStatus.classList.add("show");
+    
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+      saveStatus.classList.remove("show");
+    }, 3000);
   });
 }

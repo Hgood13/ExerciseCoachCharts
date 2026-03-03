@@ -178,3 +178,159 @@ li a:hover {
   border-radius: 4px;
   margin: 0;
 }
+
+/* Header Styling */
+.header {
+  background: linear-gradient(135deg, #2c5282 0%, #1a3a52 100%);
+  color: white;
+  padding: 32px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo-section {
+  flex-shrink: 0;
+}
+
+.logo {
+  max-width: 100px;
+  width: 100%;
+  height: 60px;
+  display: block;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.header-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.page-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.page-header h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 28px;
+}
+
+.subtitle {
+  color: #6c757d;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Motivational Section */
+.motivational-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 2px solid #e0e6ed;
+  text-align: center;
+}
+
+.motivational-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.motivational-image-large {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  margin-top: 32px;
+}
+
+/* Login Page Specific Styling */
+.login-container {
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+.login-motivational {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 24px;
+  margin-bottom: 60px;
+}
+
+/* Button Styling */
+.btn-primary {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #2c5282 0%, #1a3a52 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(44, 82, 130, 0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(44, 82, 130, 0.3);
+  background: linear-gradient(135deg, #1a3a52 0%, #0f1f2e 100%);
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 14px 32px;
+  background: white;
+  color: #2c5282;
+  border: 2px solid #2c5282;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-left: 12px;
+}
+
+.btn-secondary:hover {
+  background: #f8f9fa;
+  border-color: #1a3a52;
+  color: #1a3a52;
+}
+
+.button-group {
+  margin-top: 32px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.save-status {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  color: #155724;
+  text-align: center;
+  display: none;
+}
+
+.save-status.show {
+  display: block;
+}

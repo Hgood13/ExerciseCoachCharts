@@ -7,8 +7,21 @@
 </head>
 <body>
 
+  <!-- Header with Logo -->
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="images/TEC_logo.svg" alt="The Exercise Coach" class="logo" />
+      </div>
+      <h1 class="header-title">Coach Dashboard</h1>
+    </div>
+  </div>
+
   <div class="container">
-    <h1 id="clientName">Client Name</h1>
+    <div class="page-header">
+      <h2 id="clientName">Client Name</h2>
+      <p class="subtitle">Update workout information and save progress</p>
+    </div>
 
     <!-- 
       MVP NOTE:
@@ -51,9 +64,12 @@
       </tbody>
     </table>
 
-    <button id="saveWorkout">Save Workout</button>
+    <div class="button-group">
+      <button id="saveWorkout" class="btn-primary">Save Workout</button>
+      <a href="clients.html" class="btn-secondary">Back to Clients</a>
+    </div>
 
-    <p id="saveStatus"></p>
+    <p id="saveStatus" class="save-status"></p>
   </div>
 
   <script src="app.js"></script>
