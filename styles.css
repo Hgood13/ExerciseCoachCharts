@@ -21,7 +21,7 @@ body {
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1380px;
   margin: 60px auto;
   background: white;
   padding: 48px;
@@ -421,7 +421,7 @@ li a:hover {
   grid-template-columns: repeat(16, 80px);
   grid-template-rows: auto;
   border: 2px solid #2c3e50;
-  border-radius: 2px;
+  border-radius: 0;
   overflow: auto;
   margin-bottom: 24px;
   background: white;
@@ -434,10 +434,13 @@ li a:hover {
   color: #2c3e50;
   text-align: center;
   font-size: 13px;
-  padding: 6px;
+  /* padding: 6px; */
+  margin: 0;
   height: 40px;
+  line-height: 40px;
   font-family: inherit;
   transition: all 0.2s ease;
+  border-radius: 0;
 }
 
 .workout-grid input:focus {
@@ -463,28 +466,31 @@ li a:hover {
   grid-column: span 2;
 }
 
-/* Bold content in certain rows */
+/* Span 2 columns for row 4 */
+.workout-grid input.span-2 {
+  grid-column: span 2;
+}
 .workout-grid .grid-row.bold input {
   font-weight: 700;
 }
 
-/* Bold right border on first column (separates labels from data) */
-.workout-grid .grid-row input:nth-child(1n) {
+/* Bold right border on first three rows */
+.workout-grid .grid-row:nth-of-type(n) input {
   border-right: 3px solid #2c3e50;
 }
 
 /* Bold bottom borders on specific rows */
-.workout-grid .grid-row:nth-of-type(3) input {
+/* .workout-grid .grid-row:nth-of-type(3) input {
   border-bottom: 3px solid #2c3e50;
-}
+} */
 
 .workout-grid .grid-row:nth-of-type(4) input {
   border-bottom: 3px solid #2c3e50;
 }
 
-.workout-grid .grid-row:nth-of-type(2n+6) input {
+/* .workout-grid .grid-row:nth-of-type(2n+6) input {
   border-bottom: 3px solid #2c3e50;
-}
+} */
 
 /* Responsive: Reduce columns on smaller screens */
 @media (max-width: 768px) {
