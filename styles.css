@@ -485,3 +485,49 @@ li a:hover {
 .workout-grid .grid-row:nth-of-type(2n+6) input {
   border-bottom: 3px solid #2c3e50;
 }
+
+/* ---------- CLIENT INFO CARD STYLING ---------- */
+.client-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  margin-bottom: 32px;
+  background: #f8f9fa;
+  border: 2px solid #e0e6ed;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-textarea {
+  padding: 12px 14px;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 40px;
+  transition: all 0.3s ease;
+  background: white;
+  color: #2c3e50;
+}
+
+.info-textarea:focus {
+  outline: none;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 3px rgba(247, 147, 44, 0.1);
+}
