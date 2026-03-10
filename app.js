@@ -89,7 +89,13 @@ if (clientList) {
     const link = document.createElement("a");
 
     link.textContent = client.name;
-    link.href = `client.html?id=${client.id}`;
+    
+    // Special case for David Hobgood
+    if (client.name === "David Hobgood") {
+      link.href = "david-hobgood.html";
+    } else {
+      link.href = `client.html?id=${client.id}`;
+    }
 
     li.appendChild(link);
     clientList.appendChild(li);
@@ -115,7 +121,10 @@ if (clientNameEl) {
   if (clientNameHeaderEl) {
     clientNameHeaderEl.textContent = clientName;
   }
+}
 
+// Save button handler works for both generic and specific client pages
+if (saveButton) {
   saveButton.addEventListener("click", () => {
     // MVP: just simulate a save
     saveStatus.textContent = "Workout saved successfully!";

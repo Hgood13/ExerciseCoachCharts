@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>David Hobgood - Client Workout</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Header with Logo -->
+  <!-- <div class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="images/TEC_logo.svg" alt="The Exercise Coach" class="logo" />
+      </div>
+      <h1 class="header-title">Coach Dashboard</h1>
+    </div>
+  </div> -->
+
+  <div class="container">
+    <div class="page-header">
+      <h2>David Hobgood</h2>
+      <p class="subtitle">Update workout information and save progress</p>
+    </div>
+
+    <!-- Workout Grid Header -->
+    <div class="workout-header">
+      <span>Workout Record</span>
+      <span>David Hobgood</span>
+    </div>
+
+    <!-- 
+      MVP NOTE:
+      This grid mirrors a paper workout chart.
+      Inputs make it editable with specific bolding patterns.
+    -->
+    <div class="workout-grid">
+      <!-- Row 1: Date -->
+      <div class="grid-row wide-cells bold">
+        <input readonly value="Date"><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Row 2: Trainer -->
+      <div class="grid-row wide-cells bold">
+        <input readonly value="Trainer"><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Row 3: Routine -->
+      <div class="grid-row wide-cells bold">
+        <input readonly value="Routine"><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Row 4: Exercise Headers -->
+      <div class="grid-row bold">
+        <input readonly value="A"><input readonly value="B"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+
+      <!-- Rows 5-18: Data rows -->
+      <div class="grid-row">
+        <input readonly value="PL"><input readonly value="W Row"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="MTri Kiks"><input readonly value="TGPOG P12"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="BSS W15"><input readonly value="DBCP 15s"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="DBC Fly 8s"><input readonly value="MR Fly"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="Gob Sqt"><input readonly value="#30s"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="#25s"><input readonly value="DB Crl 10s"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="MBis Fac"><input readonly value="W/N OHP"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="Awy #30s"><input readonly value="RDLs 20s"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="Rpw"><input readonly value="Flr Abs"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="MPO #100"><input readonly value="Ball #10"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+       <input readonly value="NCP"><input readonly value="#10"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="TGTF P15"><input readonly value="MP0 #100"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="ABD 5s"><input readonly value="RLP"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>
+      <div class="grid-row">
+        <input readonly value="ADD 5s"><input readonly value="LLP"><input><input><input><input><input><input>
+        <input><input><input><input><input><input><input><input>
+      </div>            
+    </div>
+
+    <!-- Client Information Card -->
+    <div class="client-info-card">
+      <div class="info-section">
+        <h3>Goals</h3>
+        <textarea placeholder="Enter client goals..." class="info-textarea"></textarea>
+      </div>
+
+      <div class="info-section">
+        <h3>Injuries</h3>
+        <textarea placeholder="Enter any injuries or limitations..." class="info-textarea"></textarea>
+      </div>
+
+      <div class="info-section">
+        <h3>Personality</h3>
+        <textarea placeholder="Enter personality notes..." class="info-textarea"></textarea>
+      </div>
+
+      <div class="info-section">
+        <h3>Comments</h3>
+        <textarea placeholder="Other comments..." class="info-textarea"></textarea>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <a href="clients.html" class="btn-secondary">Back to Clients</a>
+      <button id="saveWorkout" class="btn-primary">Save Workout</button>
+    </div>
+
+    <p id="saveStatus" class="save-status"></p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
