@@ -422,7 +422,7 @@ li a:hover {
   grid-template-rows: auto;
   border: 2px solid #2c3e50;
   border-radius: 2px;
-  overflow: hidden;
+  overflow: auto;
   margin-bottom: 24px;
   background: white;
 }
@@ -484,6 +484,31 @@ li a:hover {
 
 .workout-grid .grid-row:nth-of-type(2n+6) input {
   border-bottom: 3px solid #2c3e50;
+}
+
+/* Responsive: Reduce columns on smaller screens */
+@media (max-width: 768px) {
+  .workout-grid {
+    grid-template-columns: repeat(16, 60px);
+  }
+  
+  .workout-grid input {
+    font-size: 12px;
+    padding: 4px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .workout-grid {
+    grid-template-columns: repeat(16, 50px);
+  }
+  
+  .workout-grid input {
+    font-size: 11px;
+    padding: 3px;
+    height: 32px;
+  }
 }
 
 /* ---------- CLIENT INFO CARD STYLING ---------- */
