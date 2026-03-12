@@ -105,22 +105,18 @@ if (clientList) {
 /* -----------------------------
    CLIENT CHART LOGIC
 -------------------------------- */
-const clientNameEl = document.getElementById("clientName");
 const clientNameHeaderEl = document.getElementById("clientNameHeader");
 const saveButton = document.getElementById("saveWorkout");
 const saveStatus = document.getElementById("saveStatus");
 
-if (clientNameEl) {
+if (clientNameHeaderEl) {
   const params = new URLSearchParams(window.location.search);
   const clientId = Number(params.get("id"));
 
   const client = clients.find(c => c.id === clientId);
   const clientName = client ? client.name : "Client";
   
-  clientNameEl.textContent = clientName;
-  if (clientNameHeaderEl) {
-    clientNameHeaderEl.textContent = clientName;
-  }
+  clientNameHeaderEl.textContent = clientName;
 }
 
 // Save button handler works for both generic and specific client pages
