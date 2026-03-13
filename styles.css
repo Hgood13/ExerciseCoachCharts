@@ -499,7 +499,7 @@ li a:hover {
   }
   
   .workout-grid input {
-    font-size: 12px;
+    font-size: 16px;
     padding: 4px;
     height: 36px;
   }
@@ -511,7 +511,7 @@ li a:hover {
   }
   
   .workout-grid input {
-    font-size: 11px;
+    font-size: 16px;
     padding: 3px;
     height: 32px;
   }
@@ -548,7 +548,7 @@ li a:hover {
   padding: 12px 14px;
   border: 2px solid #e0e6ed;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
   font-family: inherit;
   resize: vertical;
   min-height: 40px;
