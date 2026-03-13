@@ -132,3 +132,27 @@ if (saveButton) {
     }, 3000);
   });
 }
+
+/* -----------------------------
+   DATE ROW AUTO-FILL
+-------------------------------- */
+// Add click handler to date row cells to auto-fill with today's date
+const workoutGrid = document.querySelector(".workout-grid");
+if (workoutGrid) {
+  const firstRow = workoutGrid.querySelector(".grid-row");
+  if (firstRow) {
+    const dateInputs = firstRow.querySelectorAll("input:not([readonly])");
+    
+    // Format today's date as M/D/YY
+    const today = new Date();
+    const todayFormatted = `${today.getMonth() + 1}/${today.getDate()}/${String(today.getFullYear()).slice(-2)}`;
+    
+    dateInputs.forEach(input => {
+      input.addEventListener("click", () => {
+        if (input.value === "") {
+          input.value = todayFormatted;
+        }
+      });
+    });
+  }
+}
