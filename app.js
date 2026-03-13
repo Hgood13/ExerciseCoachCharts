@@ -156,6 +156,59 @@ if (workoutGrid) {
     });
   }
 
+  // Helper function to position dropdown correctly on mobile and desktop
+  function showDropdown(input, options, dropdownClass, callback) {
+    // Remove any existing dropdowns
+    const existingDropdown = document.querySelector("." + dropdownClass);
+    if (existingDropdown) {
+      existingDropdown.remove();
+    }
+    
+    // Create dropdown container
+    const dropdown = document.createElement("div");
+    dropdown.className = dropdownClass;
+    dropdown.style.position = "absolute";
+    dropdown.style.zIndex = "1000";
+    dropdown.style.backgroundColor = "white";
+    dropdown.style.border = "1px solid #ccc";
+    dropdown.style.borderRadius = "4px";
+    dropdown.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+    
+    options.forEach(option => {
+      const optionDiv = document.createElement("div");
+      optionDiv.textContent = option;
+      optionDiv.style.padding = "8px 12px";
+      optionDiv.style.cursor = "pointer";
+      optionDiv.style.borderBottom = "1px solid #eee";
+      optionDiv.style.fontSize = "14px";
+      
+      optionDiv.addEventListener("mouseenter", () => {
+        optionDiv.style.backgroundColor = "#f0f0f0";
+      });
+      
+      optionDiv.addEventListener("mouseleave", () => {
+        optionDiv.style.backgroundColor = "white";
+      });
+      
+      optionDiv.addEventListener("click", () => {
+        callback(input, option, dropdown);
+      });
+      
+      dropdown.appendChild(optionDiv);
+    });
+    
+    // Position dropdown using document-relative coordinates (fixes mobile scrolling issues)
+    const rect = input.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+    
+    dropdown.style.top = (rect.bottom + scrollTop + 5) + "px";
+    dropdown.style.left = (rect.left + scrollLeft) + "px";
+    dropdown.style.minWidth = rect.width + "px";
+    
+    document.body.appendChild(dropdown);
+  }
+
   /* ----------------------------
      TRAINER ROW DROPDOWN
   -------------------------------- */
@@ -171,58 +224,15 @@ if (workoutGrid) {
       input.addEventListener("click", (e) => {
         e.stopPropagation();
         
-        // Remove any existing dropdowns
-        const existingDropdown = document.querySelector(".trainer-dropdown");
-        if (existingDropdown) {
-          existingDropdown.remove();
-        }
-        
-        // Create dropdown container
-        const dropdown = document.createElement("div");
-        dropdown.className = "trainer-dropdown";
-        dropdown.style.position = "fixed";
-        dropdown.style.zIndex = "1000";
-        dropdown.style.backgroundColor = "white";
-        dropdown.style.border = "1px solid #ccc";
-        dropdown.style.borderRadius = "4px";
-        dropdown.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
-        
-        trainerOptions.forEach(option => {
-          const optionDiv = document.createElement("div");
-          optionDiv.textContent = option;
-          optionDiv.style.padding = "8px 12px";
-          optionDiv.style.cursor = "pointer";
-          optionDiv.style.borderBottom = "1px solid #eee";
-          optionDiv.style.fontSize = "14px";
-          
-          optionDiv.addEventListener("mouseenter", () => {
-            optionDiv.style.backgroundColor = "#f0f0f0";
-          });
-          
-          optionDiv.addEventListener("mouseleave", () => {
-            optionDiv.style.backgroundColor = "white";
-          });
-          
-          optionDiv.addEventListener("click", () => {
-            if (option === "Other") {
-              input.value = "";
-              input.focus();
-            } else {
-              input.value = option;
-            }
-            dropdown.remove();
-          });
-          
-          dropdown.appendChild(optionDiv);
+        showDropdown(input, trainerOptions, "trainer-dropdown", (input, option, dropdown) => {
+          if (option === "Other") {
+            input.value = "";
+            input.focus();
+          } else {
+            input.value = option;
+          }
+          dropdown.remove();
         });
-        
-        // Position dropdown
-        const rect = input.getBoundingClientRect();
-        dropdown.style.top = (rect.bottom + 5) + "px";
-        dropdown.style.left = rect.left + "px";
-        dropdown.style.minWidth = rect.width + "px";
-        
-        document.body.appendChild(dropdown);
       });
     });
   }
@@ -242,53 +252,10 @@ if (workoutGrid) {
       input.addEventListener("click", (e) => {
         e.stopPropagation();
         
-        // Remove any existing dropdowns
-        const existingDropdown = document.querySelector(".routine-dropdown");
-        if (existingDropdown) {
-          existingDropdown.remove();
-        }
-        
-        // Create dropdown container
-        const dropdown = document.createElement("div");
-        dropdown.className = "routine-dropdown";
-        dropdown.style.position = "fixed";
-        dropdown.style.zIndex = "1000";
-        dropdown.style.backgroundColor = "white";
-        dropdown.style.border = "1px solid #ccc";
-        dropdown.style.borderRadius = "4px";
-        dropdown.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
-        
-        routineOptions.forEach(option => {
-          const optionDiv = document.createElement("div");
-          optionDiv.textContent = option;
-          optionDiv.style.padding = "8px 12px";
-          optionDiv.style.cursor = "pointer";
-          optionDiv.style.borderBottom = "1px solid #eee";
-          optionDiv.style.fontSize = "14px";
-          
-          optionDiv.addEventListener("mouseenter", () => {
-            optionDiv.style.backgroundColor = "#f0f0f0";
-          });
-          
-          optionDiv.addEventListener("mouseleave", () => {
-            optionDiv.style.backgroundColor = "white";
-          });
-          
-          optionDiv.addEventListener("click", () => {
-            input.value = option;
-            dropdown.remove();
-          });
-          
-          dropdown.appendChild(optionDiv);
+        showDropdown(input, routineOptions, "routine-dropdown", (input, option, dropdown) => {
+          input.value = option;
+          dropdown.remove();
         });
-        
-        // Position dropdown
-        const rect = input.getBoundingClientRect();
-        dropdown.style.top = (rect.bottom + 5) + "px";
-        dropdown.style.left = rect.left + "px";
-        dropdown.style.minWidth = rect.width + "px";
-        
-        document.body.appendChild(dropdown);
       });
     });
   }
