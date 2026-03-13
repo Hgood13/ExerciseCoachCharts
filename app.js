@@ -155,4 +155,155 @@ if (workoutGrid) {
       });
     });
   }
-}
+
+  /* ----------------------------
+     TRAINER ROW DROPDOWN
+  -------------------------------- */
+  // Add click handler to trainer row cells to show dropdown
+  const allRows = workoutGrid.querySelectorAll(".grid-row");
+  if (allRows.length > 1) {
+    const trainerRow = allRows[1]; // Second row is trainer row
+    const trainerInputs = trainerRow.querySelectorAll("input:not([readonly])");
+    
+    const trainerOptions = ["Aaron", "Bill", "Brandon", "Megan", "Other"];
+    
+    trainerInputs.forEach(input => {
+      input.addEventListener("click", (e) => {
+        e.stopPropagation();
+        
+        // Remove any existing dropdowns
+        const existingDropdown = document.querySelector(".trainer-dropdown");
+        if (existingDropdown) {
+          existingDropdown.remove();
+        }
+        
+        // Create dropdown container
+        const dropdown = document.createElement("div");
+        dropdown.className = "trainer-dropdown";
+        dropdown.style.position = "fixed";
+        dropdown.style.zIndex = "1000";
+        dropdown.style.backgroundColor = "white";
+        dropdown.style.border = "1px solid #ccc";
+        dropdown.style.borderRadius = "4px";
+        dropdown.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+        
+        trainerOptions.forEach(option => {
+          const optionDiv = document.createElement("div");
+          optionDiv.textContent = option;
+          optionDiv.style.padding = "8px 12px";
+          optionDiv.style.cursor = "pointer";
+          optionDiv.style.borderBottom = "1px solid #eee";
+          optionDiv.style.fontSize = "14px";
+          
+          optionDiv.addEventListener("mouseenter", () => {
+            optionDiv.style.backgroundColor = "#f0f0f0";
+          });
+          
+          optionDiv.addEventListener("mouseleave", () => {
+            optionDiv.style.backgroundColor = "white";
+          });
+          
+          optionDiv.addEventListener("click", () => {
+            if (option === "Other") {
+              input.value = "";
+              input.focus();
+            } else {
+              input.value = option;
+            }
+            dropdown.remove();
+          });
+          
+          dropdown.appendChild(optionDiv);
+        });
+        
+        // Position dropdown
+        const rect = input.getBoundingClientRect();
+        dropdown.style.top = (rect.bottom + 5) + "px";
+        dropdown.style.left = rect.left + "px";
+        dropdown.style.minWidth = rect.width + "px";
+        
+        document.body.appendChild(dropdown);
+      });
+    });
+  }
+
+  /* ----------------------------
+     ROUTINE ROW DROPDOWN
+  -------------------------------- */
+  // Add click handler to routine row cells to show dropdown
+  const allRows2 = workoutGrid.querySelectorAll(".grid-row");
+  if (allRows2.length > 2) {
+    const routineRow = allRows2[2]; // Third row is routine row
+    const routineInputs = routineRow.querySelectorAll("input:not([readonly])");
+    
+    const routineOptions = ["A", "B"];
+    
+    routineInputs.forEach(input => {
+      input.addEventListener("click", (e) => {
+        e.stopPropagation();
+        
+        // Remove any existing dropdowns
+        const existingDropdown = document.querySelector(".routine-dropdown");
+        if (existingDropdown) {
+          existingDropdown.remove();
+        }
+        
+        // Create dropdown container
+        const dropdown = document.createElement("div");
+        dropdown.className = "routine-dropdown";
+        dropdown.style.position = "fixed";
+        dropdown.style.zIndex = "1000";
+        dropdown.style.backgroundColor = "white";
+        dropdown.style.border = "1px solid #ccc";
+        dropdown.style.borderRadius = "4px";
+        dropdown.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+        
+        routineOptions.forEach(option => {
+          const optionDiv = document.createElement("div");
+          optionDiv.textContent = option;
+          optionDiv.style.padding = "8px 12px";
+          optionDiv.style.cursor = "pointer";
+          optionDiv.style.borderBottom = "1px solid #eee";
+          optionDiv.style.fontSize = "14px";
+          
+          optionDiv.addEventListener("mouseenter", () => {
+            optionDiv.style.backgroundColor = "#f0f0f0";
+          });
+          
+          optionDiv.addEventListener("mouseleave", () => {
+            optionDiv.style.backgroundColor = "white";
+          });
+          
+          optionDiv.addEventListener("click", () => {
+            input.value = option;
+            dropdown.remove();
+          });
+          
+          dropdown.appendChild(optionDiv);
+        });
+        
+        // Position dropdown
+        const rect = input.getBoundingClientRect();
+        dropdown.style.top = (rect.bottom + 5) + "px";
+        dropdown.style.left = rect.left + "px";
+        dropdown.style.minWidth = rect.width + "px";
+        
+        document.body.appendChild(dropdown);
+      });
+    });
+  }
+    
+    // Close dropdown when clicking elsewhere
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".trainer-dropdown") && !e.target.closest(".routine-dropdown") && !e.target.closest(".grid-row input")) {
+        const dropdown = document.querySelector(".trainer-dropdown");
+        const dropdown2 = document.querySelector(".routine-dropdown");
+        if (dropdown) {
+          dropdown.remove();
+        }
+        if (dropdown2) {
+          dropdown2.remove();
+        }
+      }
+    });
+  }
