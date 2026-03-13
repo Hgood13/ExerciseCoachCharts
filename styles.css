@@ -433,7 +433,7 @@ li a:hover {
   background: white;
   color: #2c3e50;
   text-align: center;
-  font-size: 13px;
+  font-size: 16px;
   /* padding: 6px; */
   margin: 0;
   height: 40px;
@@ -464,7 +464,6 @@ li a:hover {
 /* Wide cells span 2 columns */
 .workout-grid .grid-row.wide-cells input {
   grid-column: span 2;
-  font-size: 16px;
 }
 
 /* Span 2 columns for row 4 */
@@ -487,7 +486,6 @@ li a:hover {
 
 .workout-grid .grid-row:nth-of-type(4) input {
   border-bottom: 3px solid #2c3e50;
-  font-size: 16px;
 }
 
 /* .workout-grid .grid-row:nth-of-type(2n+6) input {
