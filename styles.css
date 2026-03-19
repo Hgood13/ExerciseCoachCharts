@@ -474,6 +474,11 @@ li a:hover {
   font-weight: 700;
 }
 
+/* Smaller text for columns 1-2 in data rows */
+.workout-grid input.small-text {
+  font-size: 12px;
+}
+
 /* Bold right border on first three rows */
 .workout-grid .grid-row:nth-of-type(n) input {
   border-right: 3px solid #2c3e50;
