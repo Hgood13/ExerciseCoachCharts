@@ -162,7 +162,13 @@
       // Clear all data cells in rows 5-18 (columns 0+)
       for (let i = 4; i < rows.length; i++) {
         const inputs = rows[i].querySelectorAll('input');
-        for (let j = 0; j < inputs.length; j++) {
+        // Make columns 0-1 (exercise names) editable and clear them
+        for (let j = 0; j < 2; j++) {
+          inputs[j].removeAttribute('readonly');
+          inputs[j].value = '';
+        }
+        // Clear remaining columns
+        for (let j = 2; j < inputs.length; j++) {
           inputs[j].value = '';
         }
       }
