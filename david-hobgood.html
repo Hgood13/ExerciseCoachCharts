@@ -126,6 +126,7 @@
 
     <div class="button-group">
       <a href="clients.html" class="btn-secondary">Back to Clients</a>
+      <button id="newChartBtn" class="btn-primary">New Chart</button>
       <button id="saveWorkout" class="btn-primary">Save Workout</button>
     </div>
 
@@ -133,5 +134,49 @@
   </div>
 
   <script src="app.js"></script>
+  <script>
+    document.getElementById('newChartBtn').addEventListener('click', function() {
+      const workoutGrid = document.querySelector('.workout-grid');
+      const headerSpan = Array.from(document.querySelectorAll('.workout-header span')).find(span => span.textContent.includes('Workout Record:'));
+      
+      if (headerSpan) {
+        // Extract and increment the record number
+        const currentText = headerSpan.textContent;
+        const recordMatch = currentText.match(/#?(\d+)/);
+        if (recordMatch) {
+          const newRecord = parseInt(recordMatch[1]) + 1;
+          headerSpan.textContent = 'Workout Record: #' + newRecord;
+        }
+      }
+      
+      const rows = workoutGrid.querySelectorAll('.grid-row');
+      
+      // Clear Date, Trainer, and Routine rows (rows 0-2) in columns 1+ (skip readonly label)
+      for (let i = 0; i < 3; i++) {
+        const inputs = rows[i].querySelectorAll('input');
+        for (let j = 1; j < inputs.length; j++) {
+          inputs[j].value = '';
+        }
+      }
+      
+      // Clear all data cells in rows 5-18 (columns 0+)
+      for (let i = 4; i < rows.length; i++) {
+        const inputs = rows[i].querySelectorAll('input');
+        for (let j = 0; j < inputs.length; j++) {
+          inputs[j].value = '';
+        }
+      }
+      
+      // Show success message
+      const statusMsg = document.getElementById('saveStatus');
+      statusMsg.textContent = 'New chart created successfully!';
+      statusMsg.classList.add('show');
+      
+      // Hide the message after 3 seconds
+      setTimeout(() => {
+        statusMsg.classList.remove('show');
+      }, 3000);
+    });
+  </script>
 </body>
 </html>
