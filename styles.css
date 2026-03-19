@@ -52,6 +52,10 @@ form label {
   font-size: 16px;
 }
 
+.form-group {
+  margin-bottom: 28px;
+}
+
 input {
   width: 100%;
   padding: 12px 14px;
@@ -294,6 +298,7 @@ li a:hover {
 
 /* Button Styling */
 .btn-primary {
+  display: inline-block;
   padding: 14px 32px;
   background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
   color: white;
@@ -304,12 +309,17 @@ li a:hover {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(247, 147, 44, 0.3);
+  text-decoration: none;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(247, 147, 44, 0.4);
   background: linear-gradient(135deg, #E68A1F 0%, #D47A0F 100%);
+}
+
+#addClientBtn {
+  margin-bottom: 32px;
 }
 
 .btn-secondary {
@@ -556,10 +566,11 @@ li a:hover {
   font-size: 16px;
   font-family: inherit;
   resize: vertical;
-  min-height: 40px;
+  height: 40px;
   transition: all 0.3s ease;
   background: white;
   color: #2c3e50;
+  width: 100%;
 }
 
 .info-textarea:focus {

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Client</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Header with Logo -->
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="images/TEC_logo.svg" alt="The Exercise Coach" class="logo" />
+      </div>
+      <h1 class="header-title">Coach Dashboard</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h2>Add New Client</h2>
+      <p class="subtitle">Enter client information to create a new profile</p>
+    </div>
+
+    <form id="addClientForm">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="goals">Goals</label>
+        <textarea id="goals" name="goals" placeholder="Enter client goals..." class="info-textarea" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="injuries">Injuries</label>
+        <textarea id="injuries" name="injuries" placeholder="Enter any injuries or limitations..." class="info-textarea" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="protocol">Protocol</label>
+        <textarea id="protocol" name="protocol" placeholder="Enter protocol notes..." class="info-textarea" required></textarea>
+      </div>
+
+      <div class="button-group">
+        <a href="clients.html" class="btn-secondary">Back to Clients</a>
+        <button type="submit" class="btn-primary">Create Client</button>
+      </div>
+
+      <p id="saveStatus" class="save-status"></p>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('addClientForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Check if all required fields are filled
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const goals = document.getElementById('goals').value.trim();
+      const injuries = document.getElementById('injuries').value.trim();
+      const protocol = document.getElementById('protocol').value.trim();
+      
+      if (firstName && lastName && goals && injuries && protocol) {
+        const fullName = firstName + ' ' + lastName;
+        const statusMsg = document.getElementById('saveStatus');
+        statusMsg.textContent = 'Client "' + fullName + '" has been successfully added!';
+        statusMsg.classList.add('show');
+        
+        // Reset form
+        this.reset();
+        
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+          statusMsg.classList.remove('show');
+        }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>
