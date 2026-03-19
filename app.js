@@ -93,6 +93,8 @@ if (clientList) {
     // Special case for David Hobgood
     if (client.name === "David Hobgood") {
       link.href = "david-hobgood.html";
+    } else if (client.name === "Brandon Jackson") {
+      link.href = "brandon-jackson.html";
     } else {
       link.href = `client.html?id=${client.id}`;
     }
