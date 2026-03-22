@@ -1,0 +1,539 @@
+/* 
+  EXERCISE COACH INSPIRED STYLING
+  Professional, Clean, Modern Aesthetic
+  - Premium feel with ample spacing
+  - Strong visual hierarchy
+  - Professional color palette
+  - Clear, readable typography
+*/
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  margin: 0;
+  padding: 0;
+  color: #2c3e50;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1380px;
+  margin: 60px auto;
+  background: white;
+  padding: 48px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin: 0 0 32px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a3a52;
+  letter-spacing: -0.5px;
+}
+
+h2 {
+  margin: 32px 0 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+form label {
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.form-group {
+  margin-bottom: 28px;
+}
+
+input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 8px;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+input:focus {
+  outline: none;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 3px rgba(247, 147, 44, 0.1);
+}
+
+button {
+  padding: 14px 32px;
+  margin-top: 28px;
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(247, 147, 44, 0.3);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(247, 147, 44, 0.4);
+  background: linear-gradient(135deg, #E68A1F 0%, #D47A0F 100%);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(247, 147, 44, 0.3);
+}
+
+.error-message {
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  background-color: #fee;
+  border: 2px solid #d9534f;
+  border-radius: 6px;
+  color: #c9302c;
+  font-weight: 500;
+  text-align: center;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+li {
+  margin-bottom: 0;
+}
+
+li a {
+  display: block;
+  padding: 20px 24px;
+  background: white;
+  border: 2px solid #e0e6ed;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+li a:hover {
+  background: #fff9f5;
+  border-color: #F7932C;
+  box-shadow: 0 6px 16px rgba(247, 147, 44, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Old table styles - replaced by grid layout */
+
+/* Header Styling */
+.header {
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
+  color: white;
+  padding: 32px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.header-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo-section {
+  flex-shrink: 0;
+}
+
+.logo {
+  max-width: 400px;
+  width: 100%;
+  height: 240px;
+  display: block;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.header-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.page-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.page-header h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 28px;
+}
+
+.subtitle {
+  color: #6c757d;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Motivational Section */
+.motivational-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 2px solid #e0e6ed;
+  text-align: center;
+}
+
+.motivational-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.motivational-image-large {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  margin-top: 32px;
+}
+
+/* Login Page Specific Styling */
+.login-container {
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+.login-motivational {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 24px;
+  margin-bottom: 60px;
+}
+
+/* Login Page Layout */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.login-center {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-image-left,
+.login-image-right {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-side-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 500px;
+  object-fit: cover;
+}
+
+/* Responsive - Stack on smaller screens */
+@media (max-width: 1024px) {
+  .login-wrapper {
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  .login-image-left,
+  .login-image-right {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .login-center {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .login-side-image {
+    max-height: 400px;
+  }
+}
+
+/* Button Styling */
+.btn-primary {
+  display: inline-block;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(247, 147, 44, 0.3);
+  text-decoration: none;
+  line-height: 1.5;
+  height: 48px;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(247, 147, 44, 0.4);
+  background: linear-gradient(135deg, #E68A1F 0%, #D47A0F 100%);
+}
+
+#addClientBtn {
+  margin-bottom: 32px;
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 14px 32px;
+  background: white;
+  color: #F7932C;
+  border: 2px solid #F7932C;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin: 0;
+  line-height: 1.5;
+  height: 48px;
+  vertical-align: middle;
+}
+
+.btn-secondary:hover {
+  background: #FFF9F5;
+  border-color: #E68A1F;
+  color: #E68A1F;
+}
+
+.button-group {
+  margin-top: 32px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.save-status {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  color: #155724;
+  text-align: center;
+  display: none;
+}
+
+.save-status.show {
+  display: block;
+}
+
+/* ---------- WORKOUT GRID STYLING ---------- */
+.workout-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 12px 0;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #F7932C;
+}
+
+.workout-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 80px);
+  grid-template-rows: auto;
+  border: 2px solid #2c3e50;
+  border-radius: 0;
+  overflow: auto;
+  margin-bottom: 24px;
+  background: white;
+}
+
+/* Grid input styling */
+.workout-grid input {
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #2c3e50;
+  text-align: center;
+  font-size: 16px;
+  /* padding: 6px; */
+  margin: 0;
+  height: 40px;
+  line-height: 40px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  border-radius: 0;
+}
+
+.workout-grid input:focus {
+  outline: none;
+  background: #FFF9F5;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 2px rgba(247, 147, 44, 0.1);
+}
+
+.workout-grid input[readonly] {
+  background: #f0f0f0;
+  font-weight: 600;
+  cursor: default;
+}
+
+/* Grid row wrapper - display:contents keeps inputs as grid items */
+.workout-grid .grid-row {
+  display: contents;
+}
+
+/* Wide cells span 2 columns */
+.workout-grid .grid-row.wide-cells input {
+  grid-column: span 2;
+}
+
+/* Span 2 columns for row 4 */
+.workout-grid input.span-2 {
+  grid-column: span 2;
+}
+.workout-grid .grid-row.bold input {
+  font-weight: 700;
+}
+
+/* Smaller text for columns 1-2 in data rows */
+.workout-grid input.small-text {
+  font-size: 12px;
+}
+
+/* Bold right border on first three rows */
+.workout-grid .grid-row:nth-of-type(n) input {
+  border-right: 3px solid #2c3e50;
+}
+
+/* Bold bottom borders on specific rows */
+/* .workout-grid .grid-row:nth-of-type(3) input {
+  border-bottom: 3px solid #2c3e50;
+} */
+
+.workout-grid .grid-row:nth-of-type(4) input {
+  border-bottom: 3px solid #2c3e50;
+}
+
+/* .workout-grid .grid-row:nth-of-type(2n+6) input {
+  border-bottom: 3px solid #2c3e50;
+} */
+
+/* Responsive: Reduce columns on smaller screens */
+@media (max-width: 768px) {
+  .workout-grid {
+    grid-template-columns: repeat(16, 60px);
+  }
+  
+  .workout-grid input {
+    font-size: 16px;
+    padding: 4px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .workout-grid {
+    grid-template-columns: repeat(16, 50px);
+  }
+  
+  .workout-grid input {
+    font-size: 16px;
+    padding: 3px;
+    height: 32px;
+  }
+}
+
+/* ---------- CLIENT INFO CARD STYLING ---------- */
+.client-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  margin-bottom: 32px;
+  background: #f8f9fa;
+  border: 2px solid #e0e6ed;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-textarea {
+  padding: 12px 14px;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  height: 40px;
+  transition: all 0.3s ease;
+  background: white;
+  color: #2c3e50;
+  width: 100%;
+}
+
+.info-textarea:focus {
+  outline: none;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 3px rgba(247, 147, 44, 0.1);
+}

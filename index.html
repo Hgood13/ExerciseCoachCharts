@@ -1,62 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Coach Sign In</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-
-  <!-- Header with Logo -->
-  <div class="header">
-    <div class="header-content">
-      <div class="logo-section">
-        <img src="images/TEC_logo.svg" alt="The Exercise Coach" class="logo" />
-      </div>
-      <h1 class="header-title">The Exercise Coach</h1>
-    </div>
-  </div>
-
-  <!-- 
-    MVP NOTE:
-    This is mock authentication.
-    The goal is to demonstrate flow, not security.
-  -->
-  <div class="login-wrapper">
-    <!-- Left Image -->
-    <div class="login-image-left">
-      <img src="images/The_gym.jpg" alt="The Exercise Coach Gym" class="login-side-image" />
-    </div>
-
-    <!-- Login Form -->
-    <div class="login-center">
-      <div class="container login-container">
-        <h1>Coach Sign In</h1>
-
-        <div id="errorMessage" class="error-message" style="display: none;"></div>
-
-        <form id="loginForm">
-          <label>
-            Username
-            <input type="text" id="username" required />
-          </label>
-
-          <label>
-            Password
-            <input type="password" id="password" required />
-          </label>
-
-          <button type="submit">Sign In</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Right Image -->
-    <div class="login-image-right">
-      <img src="images/the_exercise_coach_workout.jpg" alt="Exercise Coach Training Session" class="login-side-image" />
-    </div>
-  </div>
-
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/images/TEC_logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Exercise Coach</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
