@@ -58,6 +58,7 @@
     </form>
   </div>
 
+  <script src="db.js"></script>
   <script src="app.js"></script>
   <script>
     document.getElementById('addClientForm').addEventListener('submit', function(e) {
@@ -70,8 +71,10 @@
       const injuries = document.getElementById('injuries').value.trim();
       const protocol = document.getElementById('protocol').value.trim();
       
-      if (firstName && lastName && goals && injuries && protocol) {
+      if (firstName && lastName) {
         const fullName = firstName + ' ' + lastName;
+        ECC.addClient(db, fullName, '', goals, injuries, protocol);
+
         const statusMsg = document.getElementById('saveStatus');
         statusMsg.textContent = 'Client "' + fullName + '" has been successfully added!';
         statusMsg.classList.add('show');
