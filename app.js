@@ -1,49 +1,13 @@
-/* 
-  MVP DATA
-  This replaces a backend for now.
+/*
+  app.js — Application Logic
+  Data is loaded from and saved to localStorage via db.js (window.ECC).
 */
 
-const clients = [
-  { id: 1, name: "Sarah Johnson" },
-  { id: 2, name: "Mike Thompson" },
-  { id: 3, name: "Emily Davis" },
-  { id: 4, name: "David Hobgood" },
-  { id: 5, name: "Jessica Martinez" },
-  { id: 6, name: "Robert Anderson" },
-  { id: 7, name: "Lisa Chen" },
-  { id: 8, name: "James Wilson" },
-  { id: 9, name: "Amanda Brown" },
-  { id: 10, name: "Christopher Lee" },
-  { id: 11, name: "Michelle Garcia" },
-  { id: 12, name: "Daniel Rodriguez" },
-  { id: 13, name: "Rachel Taylor" },
-  { id: 14, name: "Kevin Moore" },
-  { id: 15, name: "Maria Sanchez" },
-  { id: 16, name: "Brandon Jackson" },
-  { id: 17, name: "Jennifer White" },
-  { id: 18, name: "Matthew Harris" },
-  { id: 19, name: "Lauren Clark" },
-  { id: 20, name: "Joshua Lewis" }
-];
+/* Load (or seed) the database */
+const db = ECC.loadDB();
 
-/* Sort clients by last name, then first name */
-clients.sort((a, b) => {
-  const aNames = a.name.trim().split(' ');
-  const bNames = b.name.trim().split(' ');
-  
-  const aLastName = aNames[aNames.length - 1].toLowerCase();
-  const bLastName = bNames[bNames.length - 1].toLowerCase();
-  
-  // Compare last names
-  if (aLastName !== bLastName) {
-    return aLastName.localeCompare(bLastName);
-  }
-  
-  // If last names are same, compare first names
-  const aFirstName = aNames[0].toLowerCase();
-  const bFirstName = bNames[0].toLowerCase();
-  return aFirstName.localeCompare(bFirstName);
-});
+/* Sorted client list for use by this page */
+const clients = ECC.getClients(db);
 
 /* -----------------------------
    SIGN IN LOGIC
@@ -115,16 +79,64 @@ if (clientNameHeaderEl) {
   const params = new URLSearchParams(window.location.search);
   const clientId = Number(params.get("id"));
 
-  const client = clients.find(c => c.id === clientId);
+  const client = ECC.getClientById(db, clientId);
   const clientName = client ? client.name : "Client";
   
   clientNameHeaderEl.textContent = clientName;
 }
 
-// Save button handler works for both generic and specific client pages
+// Save button handler — reads the workout grid and persists to localStorage
 if (saveButton) {
   saveButton.addEventListener("click", () => {
-    // MVP: just simulate a save
+    const params = new URLSearchParams(window.location.search);
+    const clientId = Number(params.get("id"));
+    const client = clientId ? ECC.getClientById(db, clientId) : null;
+
+    if (client) {
+      const grid = document.querySelector(".workout-grid");
+      if (grid) {
+        const rows = grid.querySelectorAll(".grid-row");
+
+        // Collect sessions from header rows (Date / Trainer / Routine)
+        const sessions = [];
+        const SESSION_COLS = 7;
+        const dateInputs    = rows[0].querySelectorAll("input:not([readonly])");
+        const trainerInputs = rows[1].querySelectorAll("input:not([readonly])");
+        const routineInputs = rows[2].querySelectorAll("input:not([readonly])");
+        for (let col = 0; col < SESSION_COLS; col++) {
+          sessions.push({
+            date:    dateInputs[col]    ? dateInputs[col].value    : "",
+            trainer: trainerInputs[col] ? trainerInputs[col].value : "",
+            routine: routineInputs[col] ? routineInputs[col].value : ""
+          });
+        }
+
+        // Collect exercise rows (rows index 4 onward, skipping the header row at index 3)
+        const exercises = [];
+        for (let r = 4; r < rows.length; r++) {
+          const inputs = rows[r].querySelectorAll("input");
+          const nameA   = inputs[0] ? inputs[0].value : "";
+          const nameB   = inputs[1] ? inputs[1].value : "";
+          const results = [];
+          for (let c = 2; c < inputs.length; c++) {
+            results.push(inputs[c] ? inputs[c].value : "");
+          }
+          exercises.push({ nameA, nameB, results });
+        }
+
+        const chartData = { sessions, exercises };
+
+        // Update the latest chart, or create a new one if none exist
+        let chart = ECC.getLatestChart(client);
+        if (chart) {
+          ECC.updateChartData(db, client, chart.id, chartData);
+        } else {
+          chart = ECC.addChartToClient(db, client);
+          ECC.updateChartData(db, client, chart.id, chartData);
+        }
+      }
+    }
+
     saveStatus.textContent = "Workout saved successfully!";
     saveStatus.classList.add("show");
     
