@@ -1,29 +1,52 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import Header from '../components/Header.jsx'
-import { clients } from '../data/clients.js'
+import { fetchClients } from '../services/clientService.js'
 
 export default function ClientsPage() {
+  const [clients, setClients] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    async function loadClients() {
+      try {
+        setLoading(true)
+        const data = await fetchClients()
+        setClients(data)
+      } catch (err) {
+        setError('Failed to load clients. Please try again.')
+        console.error(err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadClients()
+  }, [])
+
   return (
     <>
       <Header title="Coach Dashboard" />
 
       <div className="container">
-        {/*
-          MVP NOTE:
-          This list is static for now.
-          Later, it will be driven by a database.
-        */}
         <Link to="/clients/add" id="addClientBtn" className="btn-primary">
           Add Client
         </Link>
 
-        <ul id="clientList">
-          {clients.map(client => (
-            <li key={client.id}>
-              <Link to={`/clients/${client.id}`}>{client.name}</Link>
-            </li>
-          ))}
-        </ul>
+        {error && <div className="error-message">{error}</div>}
+
+        {loading ? (
+          <p>Loading clients...</p>
+        ) : (
+          <ul id="clientList">
+            {clients.map(client => (
+              <li key={client.id}>
+                <Link to={`/clients/${client.id}`}>{client.name}</Link>
+              </li>
+            ))}
+          </ul>
+        )}
 
         {/* Motivational Image Section */}
         <div className="motivational-section">

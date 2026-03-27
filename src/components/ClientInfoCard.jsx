@@ -1,9 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-export default function ClientInfoCard() {
+export default function ClientInfoCard({ client }) {
   const [goals, setGoals] = useState('')
   const [injuries, setInjuries] = useState('')
   const [protocol, setProtocol] = useState('')
+
+  // Populate fields when client data loads
+  useEffect(() => {
+    if (client) {
+      setGoals(client.goals || '')
+      setInjuries(client.injuries || '')
+      setProtocol(client.protocol || '')
+    }
+  }, [client])
 
   return (
     <div className="client-info-card">
