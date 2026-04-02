@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react'
 
 const TRAINER_OPTIONS = ["Aaron", "Bill", "Brandon", "Megan", "Other"]
 const ROUTINE_OPTIONS = ["A", "B"]
@@ -16,12 +16,86 @@ function buildInitialSessions() {
   return Array.from({ length: 7 }, () => ({ date: '', trainer: '', routine: '' }))
 }
 
-export default function WorkoutGrid({ clientName, recordNumber, onRecordChange }) {
+export default forwardRef(function WorkoutGrid({ clientName, recordNumber, onRecordChange, charts = [] }, ref) {
   const [sessions, setSessions] = useState(buildInitialSessions)
   const [rows, setRows] = useState(buildInitialGrid)
   const [dropdown, setDropdown] = useState(null) // { type, index, rect }
 
   const dropdownRef = useRef(null)
+
+  /* Expose getData method to parent via ref */
+  useImperativeHandle(ref, () => ({
+    getData: () => ({
+      sessions: sessions[0] || { date: '', trainer: '', routine: '' },
+      exercises: {
+        nameA: rows[0]?.colA || '',
+        nameB: rows[0]?.colB || '',
+        results: rows
+          .filter(row => row.colA || row.colB || row.sessions.some(s => s !== ''))
+          .map((row, idx) => ({
+            weight: row.sessions[0] || '',
+            reps: row.sessions[1] || '',
+            notes: row.sessions[2] || '',
+            session: idx + 1
+          }))
+      }
+    })
+  }), [sessions, rows])
+
+  /* Load chart data when recordNumber or charts change */
+  useEffect(() => {
+    if (charts && charts.length > 0) {
+      // Find the chart matching the current recordNumber
+      const currentChart = charts.find(c => c.record_number === recordNumber)
+      
+      if (currentChart) {
+        // Parse the JSON strings from the database
+        try {
+          const sessionsData = typeof currentChart.sessions === 'string' 
+            ? JSON.parse(currentChart.sessions) 
+            : currentChart.sessions
+          const exercisesData = typeof currentChart.exercises === 'string' 
+            ? JSON.parse(currentChart.exercises) 
+            : currentChart.exercises
+
+          // Load sessions into the grid
+          if (sessionsData && (sessionsData.date || sessionsData.trainer || sessionsData.routine)) {
+            setSessions([sessionsData, ...Array(6).fill({ date: '', trainer: '', routine: '' })])
+          }
+
+          // Load exercises into the rows
+          if (exercisesData && exercisesData.results) {
+            const newRows = exercisesData.results.map((result, idx) => ({
+              colA: exercisesData.nameA || '',
+              colB: exercisesData.nameB || '',
+              sessions: [
+                `${result.weight || ''}`,
+                `${result.reps || ''}`,
+                `${result.notes || ''}`,
+                '',
+                '',
+                '',
+                ''
+              ]
+            }))
+            
+            // Pad with empty rows to reach DATA_ROWS
+            while (newRows.length < DATA_ROWS) {
+              newRows.push({
+                colA: '',
+                colB: '',
+                sessions: Array(7).fill(''),
+              })
+            }
+            
+            setRows(newRows)
+          }
+        } catch (err) {
+          console.error('Error parsing chart data:', err)
+        }
+      }
+    }
+  }, [recordNumber, charts])
 
   /* ---- helpers ---- */
   const todayFormatted = (() => {
@@ -268,4 +342,4 @@ export default function WorkoutGrid({ clientName, recordNumber, onRecordChange }
       </button>
     </>
   )
-}
+})

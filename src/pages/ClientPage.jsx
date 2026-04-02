@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import WorkoutGrid from '../components/WorkoutGrid.jsx'
 import ClientInfoCard from '../components/ClientInfoCard.jsx'
@@ -11,6 +11,7 @@ export default function ClientPage() {
   const [error, setError] = useState('')
   const [recordNumber, setRecordNumber] = useState(1)
   const [saveMessage, setSaveMessage] = useState('')
+  const workoutGridRef = useRef(null)
 
   // Fetch client and their charts when component mounts or clientId changes
   useEffect(() => {
@@ -35,6 +36,8 @@ export default function ClientPage() {
   }, [clientId])
 
   async function handleSave() {
+    setError('') // Clear previous errors
+    
     if (!client || !client.charts || client.charts.length === 0) {
       setError('No chart data to save')
       return
@@ -48,10 +51,18 @@ export default function ClientPage() {
         return
       }
 
+      // Get current data from WorkoutGrid
+      if (!workoutGridRef.current) {
+        setError('Unable to access workout data')
+        return
+      }
+
+      const { sessions, exercises } = workoutGridRef.current.getData()
+
       // Update the chart with current data
-      // Note: You'll need to gather the actual workout data from WorkoutGrid component
       await updateChart(currentChart.id, {
-        // Pass updated sessions and exercises here once WorkoutGrid provides them
+        sessions: JSON.stringify(sessions),
+        exercises: JSON.stringify(exercises)
       })
 
       setSaveMessage('Workout saved successfully!')
@@ -95,6 +106,7 @@ export default function ClientPage() {
   return (
     <div className="container">
       <WorkoutGrid
+        ref={workoutGridRef}
         clientName={client.name}
         recordNumber={recordNumber}
         onRecordChange={setRecordNumber}
