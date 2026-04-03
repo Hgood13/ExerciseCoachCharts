@@ -20,9 +20,10 @@ export default function ClientPage() {
         setLoading(true)
         const data = await fetchClientWithCharts(clientId)
         setClient(data)
-        // Set to first chart if available
+        // Set to the chart with the highest record number
         if (data.charts && data.charts.length > 0) {
-          setRecordNumber(data.charts[0].record_number)
+          const latest = data.charts.reduce((max, c) => c.record_number > max.record_number ? c : max, data.charts[0])
+          setRecordNumber(latest.record_number)
         }
       } catch (err) {
         setError('Failed to load client. Please try again.')

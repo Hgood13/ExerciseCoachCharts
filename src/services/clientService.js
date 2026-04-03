@@ -72,6 +72,7 @@ export async function fetchClientWithCharts(clientId) {
         )
       `)
       .eq('id', clientId)
+      .order('record_number', { ascending: false, referencedTable: 'charts' })
       .single()
 
     if (error) throw error
