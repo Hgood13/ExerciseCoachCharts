@@ -16,7 +16,7 @@ function buildInitialSessions() {
   return Array.from({ length: 7 }, () => ({ date: '', trainer: '', routine: '' }))
 }
 
-export default forwardRef(function WorkoutGrid({ clientName, recordNumber, onRecordChange, charts = [] }, ref) {
+export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, onRecordChange, charts = [] }, ref) {
   const [sessions, setSessions] = useState(buildInitialSessions)
   const [rows, setRows] = useState(buildInitialGrid)
   const [dropdown, setDropdown] = useState(null) // { type, index, rect }
@@ -228,7 +228,7 @@ export default forwardRef(function WorkoutGrid({ clientName, recordNumber, onRec
       <div className="workout-header">
         <span>The Exercise Coach</span>
         <span>Workout Record: {recordNumber ? `#${recordNumber}` : ''}</span>
-        <span>Client&apos;s PIN:</span>
+        <span>PIN: {pin}</span>
         <span>{clientName}</span>
       </div>
 

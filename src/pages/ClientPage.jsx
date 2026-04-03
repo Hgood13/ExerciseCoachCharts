@@ -107,7 +107,8 @@ export default function ClientPage() {
     <div className="container">
       <WorkoutGrid
         ref={workoutGridRef}
-        clientName={client.name}
+        pin={client.pin}
+        clientName={client.name}        
         recordNumber={recordNumber}
         onRecordChange={setRecordNumber}
         charts={client.charts}
