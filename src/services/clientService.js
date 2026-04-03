@@ -8,7 +8,7 @@ export async function fetchClients() {
   try {
     const { data, error } = await supabase
       .from('clients')
-      .select('id, name, pin, goals, injuries, protocol')
+      .select('id, name, pin, phone_number, goals, injuries, protocol')
       .order('name', { ascending: true })
 
     if (error) throw error
@@ -19,6 +19,29 @@ export async function fetchClients() {
     throw error
   }
 }
+
+/**
+ * Create a new client in the database
+ * @param {Object} clientData - Client data (name, pin, goals, injuries, protocol)
+ * @returns {Promise<Object>} Created client object
+ */
+export async function createClient(clientData) {
+  try {
+    const { data, error } = await supabase
+      .from('clients')
+      .insert(clientData)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    return data
+  } catch (error) {
+    console.error('Error creating client:', error)
+    throw error
+  }
+}
+
 
 /**
  * Fetch a single client by ID with all their charts
@@ -33,6 +56,7 @@ export async function fetchClientWithCharts(clientId) {
         id,
         name,
         pin,
+        phone_number,
         goals,
         injuries,
         protocol,

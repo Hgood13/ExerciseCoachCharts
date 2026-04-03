@@ -1,26 +1,54 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Header from '../components/Header.jsx'
+import { createClient, createChart } from '../services/clientService.js'
 
 export default function AddClientPage() {
+  const navigate = useNavigate()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [phone, setPhone] = useState('')
   const [goals, setGoals] = useState('')
   const [injuries, setInjuries] = useState('')
   const [protocol, setProtocol] = useState('')
-  const [saveMessage, setSaveMessage] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    const fullName = `${firstName.trim()} ${lastName.trim()}`
-    // MVP: simulate adding a client; replace with real API call when backend is ready
-    setSaveMessage(`Client "${fullName}" has been successfully added!`)
-    setFirstName('')
-    setLastName('')
-    setGoals('')
-    setInjuries('')
-    setProtocol('')
-    setTimeout(() => setSaveMessage(''), 3000)
+    setError('')
+    setLoading(true)
+
+    try {
+      const fullName = `${firstName.trim()} ${lastName.trim()}`
+
+      // Derive PIN from last 4 digits of phone number
+      const digitsOnly = phone.replace(/\D/g, '')
+      const pin = digitsOnly.slice(-4)
+
+      // Create the client in the DB
+      const newClient = await createClient({
+        name: fullName,
+        pin,
+        phone_number: phone.trim(),
+        goals: goals.trim(),
+        injuries: injuries.trim(),
+        protocol: protocol.trim(),
+      })
+
+      // Create their first empty chart
+      await createChart(newClient.id, 1, {
+        sessions: JSON.stringify({ date: '', trainer: '', routine: '' }),
+        exercises: JSON.stringify({ nameA: '', nameB: '', results: [] }),
+      })
+
+      // Navigate to the new client's page
+      navigate(`/clients/${newClient.id}`)
+    } catch (err) {
+      setError('Failed to create client. Please try again.')
+      console.error(err)
+      setLoading(false)
+    }
   }
 
   return (
@@ -54,6 +82,18 @@ export default function AddClientPage() {
               placeholder="Enter last name"
               value={lastName}
               onChange={e => setLastName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="phone">Phone Number <span style={{ fontWeight: 'normal', fontSize: '0.875rem', color: '#666' }}>— Last four digits will be client's PIN</span></label>
+            <input
+              type="tel"
+              id="phone"
+              placeholder="Ex. 480222345"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
               required
             />
           </div>
@@ -94,18 +134,16 @@ export default function AddClientPage() {
             />
           </div>
 
+          {error && <p className="error-message">{error}</p>}
+
           <div className="button-group">
             <Link to="/clients" className="btn-secondary">
               Back to Clients
             </Link>
-            <button type="submit" className="btn-primary">
-              Create Client
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Client'}
             </button>
           </div>
-
-          {saveMessage && (
-            <p className="save-status show">{saveMessage}</p>
-          )}
         </form>
       </div>
     </>
