@@ -145,7 +145,7 @@ export async function fetchExerciseDefinitions() {
   try {
     const { data, error } = await supabase
       .from('exercise_definitions')
-      .select('id, code, name, category')
+      .select('id, code, name, category, subcategory')
       .eq('is_active', true)
       .order('category')
       .order('sort_order')
