@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHand
 
 const TRAINER_OPTIONS = ["Aaron", "Bill", "Brandon", "Megan", "Other"]
 const ROUTINE_OPTIONS = ["A", "B"]
-const DATA_ROWS = 14
+const DATA_ROWS = 16
 
 function buildInitialGrid() {
   return Array.from({ length: DATA_ROWS }, () => ({

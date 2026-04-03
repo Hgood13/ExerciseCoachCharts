@@ -1,6 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from 'react'
 
-const DATA_ROWS = 17
+const DATA_ROWS = 16
 
 function buildInitialRows() {
   return Array.from({ length: DATA_ROWS }, () => ({ colA: '', colB: '' }))
