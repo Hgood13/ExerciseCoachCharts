@@ -91,7 +91,7 @@ export default function AddClientPage() {
             <input
               type="tel"
               id="phone"
-              placeholder="Ex. 4802226345"
+              placeholder="Ex. 480-222-6345"
               value={phone}
               onChange={e => setPhone(e.target.value)}
               required
