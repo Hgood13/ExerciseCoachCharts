@@ -335,11 +335,6 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
           ))}
         </div>
       )}
-
-      {/* New Chart button (exposed so ClientPage can compose) */}
-      <button id="newChartBtn" className="btn-primary" onClick={handleNewChart}>
-        New Chart
-      </button>
     </>
   )
 })

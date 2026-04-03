@@ -491,6 +491,63 @@ li a:hover {
   }
 }
 
+/* ---------- CREATE CHART LAYOUT ---------- */
+.create-chart-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.create-chart-layout > *:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.workout-options {
+  width: 220px;
+  flex-shrink: 0;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 16px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.workout-options h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+}
+
+.workout-options-group {
+  margin-bottom: 14px;
+}
+
+.workout-options-group h4 {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.workout-options-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.workout-options-group li {
+  font-size: 13px;
+  color: #555;
+  padding: 3px 0;
+  border-bottom: 1px solid #eee;
+}
+
 /* ---------- CLIENT INFO CARD STYLING ---------- */
 .client-info-card {
   display: flex;

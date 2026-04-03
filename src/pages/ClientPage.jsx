@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import WorkoutGrid from '../components/WorkoutGrid.jsx'
+import RoutineGrid from '../components/RoutineGrid.jsx'
+import WorkoutOptions from '../components/WorkoutOptions.jsx'
 import ClientInfoCard from '../components/ClientInfoCard.jsx'
-import { fetchClientWithCharts, updateChart } from '../services/clientService.js'
+import { fetchClientWithCharts, updateChart, createChart } from '../services/clientService.js'
 
 export default function ClientPage() {
   const { clientId } = useParams()
@@ -11,7 +13,9 @@ export default function ClientPage() {
   const [error, setError] = useState('')
   const [recordNumber, setRecordNumber] = useState(1)
   const [saveMessage, setSaveMessage] = useState('')
+  const [mode, setMode] = useState('view') // 'view' | 'create'
   const workoutGridRef = useRef(null)
+  const routineGridRef = useRef(null)
 
   // Fetch client and their charts when component mounts or clientId changes
   useEffect(() => {
@@ -37,22 +41,20 @@ export default function ClientPage() {
   }, [clientId])
 
   async function handleSave() {
-    setError('') // Clear previous errors
-    
+    setError('')
+
     if (!client || !client.charts || client.charts.length === 0) {
       setError('No chart data to save')
       return
     }
 
     try {
-      // Find the current chart
       const currentChart = client.charts.find(c => c.record_number === recordNumber)
       if (!currentChart) {
         setError('Chart not found')
         return
       }
 
-      // Get current data from WorkoutGrid
       if (!workoutGridRef.current) {
         setError('Unable to access workout data')
         return
@@ -60,7 +62,6 @@ export default function ClientPage() {
 
       const { sessions, exercises } = workoutGridRef.current.getData()
 
-      // Update the chart with current data
       await updateChart(currentChart.id, {
         sessions: JSON.stringify(sessions),
         exercises: JSON.stringify(exercises)
@@ -70,6 +71,37 @@ export default function ClientPage() {
       setTimeout(() => setSaveMessage(''), 3000)
     } catch (err) {
       setError('Failed to save workout. Please try again.')
+      console.error(err)
+    }
+  }
+
+  async function handleSaveNewChart() {
+    setError('')
+
+    if (!routineGridRef.current) {
+      setError('Unable to access routine data')
+      return
+    }
+
+    try {
+      const { exercises } = routineGridRef.current.getData()
+      const newRecordNumber = (client.charts?.length > 0
+        ? Math.max(...client.charts.map(c => c.record_number))
+        : 0) + 1
+
+      const newChart = await createChart(clientId, newRecordNumber, {
+        sessions: JSON.stringify({ date: '', trainer: '', routine: '' }),
+        exercises: JSON.stringify({ nameA: '', nameB: '', results: exercises }),
+      })
+
+      // Update local state with the new chart
+      setClient(prev => ({ ...prev, charts: [...(prev.charts || []), newChart] }))
+      setRecordNumber(newRecordNumber)
+      setMode('view')
+      setSaveMessage('New chart created!')
+      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (err) {
+      setError('Failed to create chart. Please try again.')
       console.error(err)
     }
   }
@@ -106,32 +138,60 @@ export default function ClientPage() {
 
   return (
     <div className="container">
-      <WorkoutGrid
-        ref={workoutGridRef}
-        pin={client.pin}
-        clientName={client.name}        
-        recordNumber={recordNumber}
-        onRecordChange={setRecordNumber}
-        charts={client.charts}
-      />
+      {mode === 'view' ? (
+        <>
+          <WorkoutGrid
+            ref={workoutGridRef}
+            pin={client.pin}
+            clientName={client.name}
+            recordNumber={recordNumber}
+            onRecordChange={setRecordNumber}
+            charts={client.charts}
+          />
+
+          <div className="button-group">
+            <Link to="/clients" className="btn-secondary">
+              Back to Clients
+            </Link>
+            <button className="btn-secondary" onClick={() => setMode('create')}>
+              New Chart
+            </button>
+            <button className="btn-primary" onClick={handleSave}>
+              Save Workout
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="create-chart-layout">
+            <RoutineGrid
+              ref={routineGridRef}
+              pin={client.pin}
+              clientName={client.name}
+              recordNumber={
+                (client.charts?.length > 0
+                  ? Math.max(...client.charts.map(c => c.record_number))
+                  : 0) + 1
+              }
+            />
+            <WorkoutOptions />
+          </div>
+
+          <div className="button-group">
+            <button className="btn-secondary" onClick={() => setMode('view')}>
+              Cancel
+            </button>
+            <button className="btn-primary" onClick={handleSaveNewChart}>
+              Save New Chart
+            </button>
+          </div>
+        </>
+      )}
 
       <ClientInfoCard client={client} />
 
-      <div className="button-group">
-        <Link to="/clients" className="btn-secondary">
-          Back to Clients
-        </Link>
-        <button className="btn-primary" onClick={handleSave}>
-          Save Workout
-        </button>
-      </div>
-
-      {saveMessage && (
-        <p className="save-status show">{saveMessage}</p>
-      )}
-      {error && (
-        <p className="error-message">{error}</p>
-      )}
+      {saveMessage && <p className="save-status show">{saveMessage}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   )
 }
