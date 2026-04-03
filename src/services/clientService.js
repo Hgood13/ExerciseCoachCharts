@@ -138,7 +138,31 @@ export async function updateChart(chartId, chartData) {
 }
 
 /**
- * Fetch all active exercise definitions grouped by category
+ * Update an existing client's info
+ * @param {string} clientId - The UUID of the client
+ * @param {Object} clientData - Updated client data (goals, injuries, protocol)
+ * @returns {Promise<Object>} Updated client object
+ */
+export async function updateClient(clientId, clientData) {
+  try {
+    const { data, error } = await supabase
+      .from('clients')
+      .update(clientData)
+      .eq('id', clientId)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    return data
+  } catch (error) {
+    console.error('Error updating client:', error)
+    throw error
+  }
+}
+ 
+/**
+ * Fetch all active exercise definitions
  * @returns {Promise<Array>} Array of exercise definition objects
  */
 export async function fetchExerciseDefinitions() {

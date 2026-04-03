@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
-export default function ClientInfoCard({ client }) {
+export default forwardRef(function ClientInfoCard({ client }, ref) {
   const [goals, setGoals] = useState('')
   const [injuries, setInjuries] = useState('')
   const [protocol, setProtocol] = useState('')
+
+  useImperativeHandle(ref, () => ({
+    getData: () => ({ goals, injuries, protocol })
+  }), [goals, injuries, protocol])
 
   // Populate fields when client data loads
   useEffect(() => {
@@ -47,4 +51,4 @@ export default function ClientInfoCard({ client }) {
       </div>
     </div>
   )
-}
+})

@@ -4,7 +4,7 @@ import WorkoutGrid from '../components/WorkoutGrid.jsx'
 import RoutineGrid from '../components/RoutineGrid.jsx'
 import WorkoutOptions from '../components/WorkoutOptions.jsx'
 import ClientInfoCard from '../components/ClientInfoCard.jsx'
-import { fetchClientWithCharts, updateChart, createChart } from '../services/clientService.js'
+import { fetchClientWithCharts, updateChart, updateClient, createChart } from '../services/clientService.js'
 
 export default function ClientPage() {
   const { clientId } = useParams()
@@ -16,6 +16,7 @@ export default function ClientPage() {
   const [mode, setMode] = useState('view') // 'view' | 'create'
   const workoutGridRef = useRef(null)
   const routineGridRef = useRef(null)
+  const clientInfoRef = useRef(null)
 
   // Fetch client and their charts when component mounts or clientId changes
   useEffect(() => {
@@ -62,10 +63,15 @@ export default function ClientPage() {
 
       const { sessions, exercises } = workoutGridRef.current.getData()
 
-      await updateChart(currentChart.id, {
-        sessions: JSON.stringify(sessions),
-        exercises: JSON.stringify(exercises)
-      })
+      const clientInfo = clientInfoRef.current?.getData()
+
+      await Promise.all([
+        updateChart(currentChart.id, {
+          sessions: JSON.stringify(sessions),
+          exercises: JSON.stringify(exercises)
+        }),
+        clientInfo && updateClient(clientId, clientInfo)
+      ])
 
       setSaveMessage('Workout saved successfully!')
       setTimeout(() => setSaveMessage(''), 3000)
@@ -173,7 +179,7 @@ export default function ClientPage() {
         </>
       )}
 
-      <ClientInfoCard client={client} />
+      <ClientInfoCard client={client} ref={clientInfoRef} />
 
       <div className="button-group">
         {mode === 'view' ? (
