@@ -1,6 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from 'react'
 
-const DATA_ROWS = 14
+const DATA_ROWS = 17
 
 function buildInitialRows() {
   return Array.from({ length: DATA_ROWS }, () => ({ colA: '', colB: '' }))
@@ -24,40 +24,29 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
   }
 
   return (
-    <>
-      {/* Header bar */}
-      <div className="workout-header">
-        <span>The Exercise Coach</span>
-        <span>New Routine — Record #{recordNumber}</span>
-        <span>PIN: {pin}</span>
-        <span>{clientName}</span>
-      </div>
-
-      {/* Grid */}
-      <div className="workout-grid">
+    <div className="routine-grid">
         {/* Column headers */}
-        <div className="grid-row bold">
-          <input readOnly value="Exercise A" />
-          <input readOnly value="Exercise B" />
-        </div>
+        <div className="routine-grid-header">Exercise A</div>
+        <div className="routine-grid-header">Exercise B</div>
 
         {rows.map((row, rIdx) => (
-          <div className="grid-row" key={rIdx}>
+          <>
             <input
-              className="small-text"
+              key={`a-${rIdx}`}
+              className="routine-grid-cell"
               value={row.colA}
-              placeholder="Exercise A name"
+              placeholder={`A${rIdx + 1}`}
               onChange={e => handleChange(rIdx, 'colA', e.target.value)}
             />
             <input
-              className="small-text"
+              key={`b-${rIdx}`}
+              className="routine-grid-cell"
               value={row.colB}
-              placeholder="Exercise B name"
+              placeholder={`B${rIdx + 1}`}
               onChange={e => handleChange(rIdx, 'colB', e.target.value)}
             />
-          </div>
+          </>
         ))}
       </div>
-    </>
   )
 })

@@ -500,13 +500,51 @@ li a:hover {
 }
 
 .create-chart-layout > *:first-child {
-  flex: 1;
-  min-width: 0;
+  flex-shrink: 0;
+  width: 280px;
+}
+
+/* ---------- ROUTINE GRID ---------- */
+.routine-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 2px solid #2c3e50;
+  background: white;
+  margin-bottom: 24px;
+}
+
+.routine-grid-header {
+  background: #f0f0f0;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid #d0d0d0;
+  color: #2c3e50;
+}
+
+.routine-grid-cell {
+  border: 1px solid #d0d0d0;
+  background: white;
+  color: #2c3e50;
+  font-size: 14px;
+  padding: 6px 8px;
+  height: 36px;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.routine-grid-cell:focus {
+  outline: none;
+  background: #FFF9F5;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 2px rgba(247, 147, 44, 0.1);
 }
 
 .workout-options {
-  width: 220px;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
   background: #f8f8f8;
   border: 1px solid #ddd;
   border-radius: 6px;

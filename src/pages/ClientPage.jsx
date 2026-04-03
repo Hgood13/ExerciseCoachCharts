@@ -163,11 +163,19 @@ export default function ClientPage() {
         </>
       ) : (
         <>
+          <div className="workout-header">
+            <span>The Exercise Coach</span>
+            <span>New Routine — Record #{
+              (client.charts?.length > 0
+                ? Math.max(...client.charts.map(c => c.record_number))
+                : 0) + 1
+            }</span>
+            <span>PIN: {client.pin}</span>
+            <span>{client.name}</span>
+          </div>
           <div className="create-chart-layout">
             <RoutineGrid
               ref={routineGridRef}
-              pin={client.pin}
-              clientName={client.name}
               recordNumber={
                 (client.charts?.length > 0
                   ? Math.max(...client.charts.map(c => c.record_number))
