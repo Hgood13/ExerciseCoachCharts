@@ -64,30 +64,35 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
           }
 
           // Load exercises into the rows
-          if (exercisesData && exercisesData.results) {
-            const newRows = exercisesData.results.map((result, idx) => ({
-              colA: exercisesData.nameA || '',
-              colB: exercisesData.nameB || '',
-              sessions: [
-                `${result.weight || ''}`,
-                `${result.reps || ''}`,
-                `${result.notes || ''}`,
-                '',
-                '',
-                '',
-                ''
-              ]
-            }))
-            
+          if (exercisesData) {
+            let newRows = []
+
+            if (exercisesData.rows) {
+              // New format: { rows: [{ index, nameA, nameB }] }
+              newRows = exercisesData.rows.map(row => ({
+                colA: row.nameA || '',
+                colB: row.nameB || '',
+                sessions: Array(7).fill(''),
+              }))
+            } else if (exercisesData.results) {
+              // Old format: { nameA, nameB, results: [{ weight, reps, notes }] }
+              newRows = exercisesData.results.map(result => ({
+                colA: exercisesData.nameA || '',
+                colB: exercisesData.nameB || '',
+                sessions: [
+                  `${result.weight || ''}`,
+                  `${result.reps || ''}`,
+                  `${result.notes || ''}`,
+                  '', '', '', ''
+                ]
+              }))
+            }
+
             // Pad with empty rows to reach DATA_ROWS
             while (newRows.length < DATA_ROWS) {
-              newRows.push({
-                colA: '',
-                colB: '',
-                sessions: Array(7).fill(''),
-              })
+              newRows.push({ colA: '', colB: '', sessions: Array(7).fill('') })
             }
-            
+
             setRows(newRows)
           }
         } catch (err) {

@@ -91,7 +91,7 @@ export default function ClientPage() {
 
       const newChart = await createChart(clientId, newRecordNumber, {
         sessions: JSON.stringify({ date: '', trainer: '', routine: '' }),
-        exercises: JSON.stringify({ nameA: '', nameB: '', results: exercises }),
+        exercises: JSON.stringify({ rows: exercises }),
       })
 
       // Update local state with the new chart
