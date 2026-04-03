@@ -12,7 +12,23 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
   useImperativeHandle(ref, () => ({
     getData: () => ({
       exercises: rows.map((row, idx) => ({ index: idx, nameA: row.colA, nameB: row.colB }))
-    })
+    }),
+    addExercise: (name) => {
+      setRows(prev => {
+        // Fill colA first (rows 0-16), then colB
+        const next = prev.map(r => ({ ...r }))
+        const colAIdx = next.findIndex(r => !r.colA)
+        if (colAIdx !== -1) {
+          next[colAIdx] = { ...next[colAIdx], colA: name }
+          return next
+        }
+        const colBIdx = next.findIndex(r => !r.colB)
+        if (colBIdx !== -1) {
+          next[colBIdx] = { ...next[colBIdx], colB: name }
+        }
+        return next
+      })
+    }
   }), [rows])
 
   function handleChange(rowIdx, field, val) {
@@ -34,13 +50,11 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
             <input
               key={`a-${rIdx}`}
               value={row.colA}
-              placeholder={`A${rIdx + 1}`}
               onChange={e => handleChange(rIdx, 'colA', e.target.value)}
             />
             <input
               key={`b-${rIdx}`}
               value={row.colB}
-              placeholder={`B${rIdx + 1}`}
               onChange={e => handleChange(rIdx, 'colB', e.target.value)}
             />
           </>

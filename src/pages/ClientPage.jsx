@@ -168,7 +168,7 @@ export default function ClientPage() {
                   : 0) + 1
               }
             />
-            <WorkoutOptions />
+            <WorkoutOptions onSelect={name => routineGridRef.current?.addExercise(name)} />
           </div>
         </>
       )}

@@ -9,7 +9,7 @@ const EQUIPMENT_GROUPS = [
   { label: 'SciFit and Nautilus or Tuff Stuff', categories: ['SciFit', 'Nautilus or Tuff Stuff'] },
 ]
 
-export default function WorkoutOptions() {
+export default function WorkoutOptions({ onSelect }) {
   const [exercises, setExercises] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -35,7 +35,13 @@ export default function WorkoutOptions() {
                 <li className="workout-options-empty">No exercises</li>
               ) : (
                 groupExercises.map(ex => (
-                  <li key={ex.id}>
+                  <li
+                    key={ex.id}
+                    onClick={() => onSelect && onSelect(ex.code)}
+                    style={{ cursor: 'pointer' }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e8f4fd'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
+                  >
                     <span style={{ fontWeight: 700 }}>{ex.code}</span> — {ex.name}
                   </li>
                 ))
