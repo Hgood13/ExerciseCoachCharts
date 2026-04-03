@@ -136,3 +136,26 @@ export async function updateChart(chartId, chartData) {
     throw error
   }
 }
+
+/**
+ * Fetch all active exercise definitions grouped by category
+ * @returns {Promise<Array>} Array of exercise definition objects
+ */
+export async function fetchExerciseDefinitions() {
+  try {
+    const { data, error } = await supabase
+      .from('exercise_definitions')
+      .select('id, code, name, category')
+      .eq('is_active', true)
+      .order('category')
+      .order('sort_order')
+      .order('code')
+
+    if (error) throw error
+
+    return data || []
+  } catch (error) {
+    console.error('Error fetching exercise definitions:', error)
+    throw error
+  }
+}

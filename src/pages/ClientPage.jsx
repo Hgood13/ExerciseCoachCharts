@@ -139,28 +139,14 @@ export default function ClientPage() {
   return (
     <div className="container">
       {mode === 'view' ? (
-        <>
-          <WorkoutGrid
-            ref={workoutGridRef}
-            pin={client.pin}
-            clientName={client.name}
-            recordNumber={recordNumber}
-            onRecordChange={setRecordNumber}
-            charts={client.charts}
-          />
-
-          <div className="button-group">
-            <Link to="/clients" className="btn-secondary">
-              Back to Clients
-            </Link>
-            <button className="btn-secondary" onClick={() => setMode('create')}>
-              New Chart
-            </button>
-            <button className="btn-primary" onClick={handleSave}>
-              Save Workout
-            </button>
-          </div>
-        </>
+        <WorkoutGrid
+          ref={workoutGridRef}
+          pin={client.pin}
+          clientName={client.name}
+          recordNumber={recordNumber}
+          onRecordChange={setRecordNumber}
+          charts={client.charts}
+        />
       ) : (
         <>
           <div className="workout-header">
@@ -184,19 +170,35 @@ export default function ClientPage() {
             />
             <WorkoutOptions />
           </div>
+        </>
+      )}
 
-          <div className="button-group">
+      <ClientInfoCard client={client} />
+
+      <div className="button-group">
+        {mode === 'view' ? (
+          <>
+            <Link to="/clients" className="btn-secondary">
+              Back to Clients
+            </Link>
+            <button className="btn-secondary" onClick={() => setMode('create')}>
+              New Chart
+            </button>
+            <button className="btn-primary" onClick={handleSave}>
+              Save Workout
+            </button>
+          </>
+        ) : (
+          <>
             <button className="btn-secondary" onClick={() => setMode('view')}>
               Cancel
             </button>
             <button className="btn-primary" onClick={handleSaveNewChart}>
               Save New Chart
             </button>
-          </div>
-        </>
-      )}
-
-      <ClientInfoCard client={client} />
+          </>
+        )}
+      </div>
 
       {saveMessage && <p className="save-status show">{saveMessage}</p>}
       {error && <p className="error-message">{error}</p>}

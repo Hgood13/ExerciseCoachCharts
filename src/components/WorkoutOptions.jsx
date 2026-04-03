@@ -1,27 +1,41 @@
-const WORKOUT_OPTIONS = [
-  { category: 'Legs', exercises: ['Leg Press', 'Smith Machine Squat', 'Hack Squat', 'Leg Extension', 'Leg Curl', 'Calf Raise', 'Lunge'] },
-  { category: 'Chest', exercises: ['Chest Press (Machine)', 'Incline Press', 'Cable Fly', 'Pec Deck', 'Push-Up'] },
-  { category: 'Back', exercises: ['Lat Pulldown', 'Seated Row', 'Cable Row', 'Assisted Pull-Up', 'Back Extension'] },
-  { category: 'Shoulders', exercises: ['Shoulder Press (Machine)', 'Lateral Raise', 'Front Raise', 'Rear Delt Fly', 'Upright Row'] },
-  { category: 'Arms', exercises: ['Bicep Curl (Machine)', 'Preacher Curl', 'Tricep Pressdown', 'Overhead Tricep Extension', 'Hammer Curl'] },
-  { category: 'Core', exercises: ['Crunch (Machine)', 'Ab Wheel', 'Plank', 'Oblique Crunch', 'Dead Bug'] },
-  { category: 'Cardio', exercises: ['Treadmill', 'Elliptical', 'Stationary Bike', 'Rowing Machine', 'Stair Climber'] },
-]
+import { useState, useEffect } from 'react'
+import { fetchExerciseDefinitions } from '../services/clientService.js'
 
 export default function WorkoutOptions() {
+  const [grouped, setGrouped] = useState({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchExerciseDefinitions()
+      .then(data => {
+        // Group by category
+        const groups = data.reduce((acc, ex) => {
+          if (!acc[ex.category]) acc[ex.category] = []
+          acc[ex.category].push(ex)
+          return acc
+        }, {})
+        setGrouped(groups)
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
     <div className="workout-options">
       <h3>Available Exercises</h3>
-      {WORKOUT_OPTIONS.map(group => (
-        <div key={group.category} className="workout-options-group">
-          <h4>{group.category}</h4>
-          <ul>
-            {group.exercises.map(exercise => (
-              <li key={exercise}>{exercise}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {loading ? (
+        <p style={{ fontSize: '13px', color: '#888' }}>Loading...</p>
+      ) : (
+        Object.entries(grouped).map(([category, exercises]) => (
+          <div key={category} className="workout-options-group">
+            <h4>{category}</h4>
+            <ul>
+              {exercises.map(ex => (
+                <li key={ex.id}><span style={{ fontWeight: 700 }}>{ex.code}</span> — {ex.name}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      )}
     </div>
   )
 }

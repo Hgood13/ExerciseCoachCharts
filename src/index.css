@@ -298,7 +298,9 @@ li a:hover {
 
 /* Button Styling */
 .btn-primary {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 14px 32px;
   background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
   color: white;
@@ -310,9 +312,9 @@ li a:hover {
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(247, 147, 44, 0.3);
   text-decoration: none;
-  line-height: 1.5;
   height: 48px;
-  vertical-align: middle;
+  box-sizing: border-box;
+  font-family: inherit;
   margin: 0;
 }
 
@@ -327,7 +329,9 @@ li a:hover {
 }
 
 .btn-secondary {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 14px 32px;
   background: white;
   color: #F7932C;
@@ -339,9 +343,9 @@ li a:hover {
   text-decoration: none;
   transition: all 0.3s ease;
   margin: 0;
-  line-height: 1.5;
   height: 48px;
-  vertical-align: middle;
+  box-sizing: border-box;
+  font-family: inherit;
 }
 
 .btn-secondary:hover {
@@ -509,37 +513,49 @@ li a:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   border: 2px solid #2c3e50;
+  border-radius: 0;
   background: white;
   margin-bottom: 24px;
 }
 
-.routine-grid-header {
-  background: #f0f0f0;
-  font-weight: 700;
-  font-size: 14px;
-  text-align: center;
-  padding: 8px;
-  border: 1px solid #d0d0d0;
-  color: #2c3e50;
-}
-
-.routine-grid-cell {
+.routine-grid input {
   border: 1px solid #d0d0d0;
   background: white;
   color: #2c3e50;
-  font-size: 14px;
-  padding: 6px 8px;
-  height: 36px;
+  text-align: center;
+  font-size: 16px;
+  margin: 0;
+  height: 40px;
+  line-height: 40px;
   font-family: inherit;
+  transition: all 0.2s ease;
+  border-radius: 0;
   width: 100%;
   box-sizing: border-box;
 }
 
-.routine-grid-cell:focus {
+.routine-grid input:focus {
   outline: none;
   background: #FFF9F5;
   border-color: #F7932C;
   box-shadow: 0 0 0 2px rgba(247, 147, 44, 0.1);
+}
+
+.routine-grid input[readonly] {
+  background: #f0f0f0;
+  font-weight: 700;
+  cursor: default;
+}
+
+/* Bold right border on column 1 (odd inputs) */
+.routine-grid input:nth-child(odd) {
+  border-right: 3px solid #2c3e50;
+}
+
+/* Bold bottom border on header row (first 2 inputs) */
+.routine-grid input:nth-child(1),
+.routine-grid input:nth-child(2) {
+  border-bottom: 3px solid #2c3e50;
 }
 
 .workout-options {

@@ -26,21 +26,19 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
   return (
     <div className="routine-grid">
         {/* Column headers */}
-        <div className="routine-grid-header">Exercise A</div>
-        <div className="routine-grid-header">Exercise B</div>
+        <input readOnly value="Routine A" />
+        <input readOnly value="Routine B" />
 
         {rows.map((row, rIdx) => (
           <>
             <input
               key={`a-${rIdx}`}
-              className="routine-grid-cell"
               value={row.colA}
               placeholder={`A${rIdx + 1}`}
               onChange={e => handleChange(rIdx, 'colA', e.target.value)}
             />
             <input
               key={`b-${rIdx}`}
-              className="routine-grid-cell"
               value={row.colB}
               placeholder={`B${rIdx + 1}`}
               onChange={e => handleChange(rIdx, 'colB', e.target.value)}
