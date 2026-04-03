@@ -439,8 +439,8 @@ li a:hover {
   grid-column: span 2;
 }
 
-/* Span 2 columns for row 4 */
-.workout-grid input.span-2 {
+/* Span 2 columns for row 4 and session cells */
+.workout-grid .span-2 {
   grid-column: span 2;
 }
 .workout-grid .grid-row.bold input {
@@ -450,6 +450,68 @@ li a:hover {
 /* Smaller text for columns 1-2 in data rows */
 .workout-grid input.small-text {
   font-size: 12px;
+}
+
+/* ---------- SESSION CELL (checkbox + note) ---------- */
+.workout-grid .session-cell {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d0d0d0;
+  border-right: 3px solid #2c3e50;
+  background: white;
+  height: 40px;
+  padding: 0 4px;
+  gap: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.workout-grid .session-cell:focus-within {
+  background: #FFF9F5;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 2px rgba(247, 147, 44, 0.1);
+}
+
+/* Reset inputs inside session-cell so they don't inherit grid-cell styles */
+.workout-grid .session-cell input {
+  border: none;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  transition: none;
+  border-radius: 0;
+  line-height: normal;
+  box-shadow: none;
+}
+
+.workout-grid .session-cell input:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+/* Checkbox */
+.workout-grid .session-cell input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: #F7932C;
+}
+
+/* Note text input */
+.workout-grid .session-note {
+  flex: 1;
+  font-size: 11px;
+  color: #2c3e50;
+  font-family: inherit;
+  min-width: 0;
+  width: 100%;
+  text-align: left;
 }
 
 /* Bold right border on first three rows */

@@ -8,7 +8,7 @@ function buildInitialGrid() {
   return Array.from({ length: DATA_ROWS }, () => ({
     colA: '',
     colB: '',
-    sessions: Array(7).fill(''),
+    sessions: Array.from({ length: 7 }, () => ({ checked: false, note: '' })),
   }))
 }
 
@@ -28,17 +28,13 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
     getData: () => ({
       sessions: sessions[0] || { date: '', trainer: '', routine: '' },
       exercises: {
-        nameA: rows[0]?.colA || '',
-        nameB: rows[0]?.colB || '',
-        results: rows
-          .filter(row => row.colA || row.colB || row.sessions.some(s => s !== ''))
-          .map((row, idx) => ({
-            weight: row.sessions[0] || '',
-            reps: row.sessions[1] || '',
-            notes: row.sessions[2] || '',
-            session: idx + 1
-          }))
-      }
+        rows: rows.map((row, idx) => ({
+          index: idx,
+          nameA: row.colA,
+          nameB: row.colB,
+          sessions: row.sessions.map(s => ({ checked: s.checked, note: s.note })),
+        })),
+      },
     })
   }), [sessions, rows])
 
@@ -68,11 +64,16 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
             let newRows = []
 
             if (exercisesData.rows) {
-              // New format: { rows: [{ index, nameA, nameB }] }
+              // New format: { rows: [{ index, nameA, nameB, sessions? }] }
               newRows = exercisesData.rows.map(row => ({
                 colA: row.nameA || '',
                 colB: row.nameB || '',
-                sessions: Array(7).fill(''),
+                sessions: Array.from({ length: 7 }, (_, i) => {
+                  const s = row.sessions?.[i]
+                  if (s == null) return { checked: false, note: '' }
+                  if (typeof s === 'string') return { checked: false, note: s }
+                  return { checked: Boolean(s.checked), note: s.note || '' }
+                }),
               }))
             } else if (exercisesData.results) {
               // Old format: { nameA, nameB, results: [{ weight, reps, notes }] }
@@ -80,17 +81,20 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
                 colA: exercisesData.nameA || '',
                 colB: exercisesData.nameB || '',
                 sessions: [
-                  `${result.weight || ''}`,
-                  `${result.reps || ''}`,
-                  `${result.notes || ''}`,
-                  '', '', '', ''
-                ]
+                  { checked: false, note: result.weight || '' },
+                  { checked: false, note: result.reps || '' },
+                  { checked: false, note: result.notes || '' },
+                  { checked: false, note: '' },
+                  { checked: false, note: '' },
+                  { checked: false, note: '' },
+                  { checked: false, note: '' },
+                ],
               }))
             }
 
             // Pad with empty rows to reach DATA_ROWS
             while (newRows.length < DATA_ROWS) {
-              newRows.push({ colA: '', colB: '', sessions: Array(7).fill('') })
+              newRows.push({ colA: '', colB: '', sessions: Array.from({ length: 7 }, () => ({ checked: false, note: '' })) })
             }
 
             setRows(newRows)
@@ -188,13 +192,27 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
   function handleRowChange(rowIdx, field, val) {
     setRows(prev => {
       const next = [...prev]
-      if (field === 'colA' || field === 'colB') {
-        next[rowIdx] = { ...next[rowIdx], [field]: val }
-      } else {
-        const sessions = [...next[rowIdx].sessions]
-        sessions[field] = val
-        next[rowIdx] = { ...next[rowIdx], sessions }
-      }
+      next[rowIdx] = { ...next[rowIdx], [field]: val }
+      return next
+    })
+  }
+
+  function handleSessionCheck(rowIdx, sIdx, checked) {
+    setRows(prev => {
+      const next = [...prev]
+      const sessionsCopy = [...next[rowIdx].sessions]
+      sessionsCopy[sIdx] = { ...sessionsCopy[sIdx], checked }
+      next[rowIdx] = { ...next[rowIdx], sessions: sessionsCopy }
+      return next
+    })
+  }
+
+  function handleSessionNote(rowIdx, sIdx, note) {
+    setRows(prev => {
+      const next = [...prev]
+      const sessionsCopy = [...next[rowIdx].sessions]
+      sessionsCopy[sIdx] = { ...sessionsCopy[sIdx], note }
+      next[rowIdx] = { ...next[rowIdx], sessions: sessionsCopy }
       return next
     })
   }
@@ -307,13 +325,19 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
               value={row.colB}
               onChange={e => handleRowChange(rIdx, 'colB', e.target.value)}
             />
-            {row.sessions.map((val, sIdx) => (
-              <input
-                key={sIdx}
-                className="span-2"
-                value={val}
-                onChange={e => handleRowChange(rIdx, sIdx, e.target.value)}
-              />
+            {row.sessions.map((cell, sIdx) => (
+              <div key={sIdx} className="session-cell span-2">
+                <input
+                  type="checkbox"
+                  checked={cell.checked}
+                  onChange={e => handleSessionCheck(rIdx, sIdx, e.target.checked)}
+                />
+                <input
+                  className="session-note"
+                  value={cell.note}
+                  onChange={e => handleSessionNote(rIdx, sIdx, e.target.value)}
+                />
+              </div>
             ))}
           </div>
         ))}
