@@ -93,6 +93,8 @@ export default function ClientsPage() {
           )}
         </div>
 
+        <p className="search-hint">Or select the first letter of their last name</p>
+
         <div className="alpha-filter" role="group" aria-label="Filter by last name initial">
           {ALPHABET.map(letter => (
             <button
