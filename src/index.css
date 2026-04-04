@@ -328,6 +328,84 @@ li a:hover {
   margin-bottom: 32px;
 }
 
+/* ---------- CLIENT SEARCH & FILTER ---------- */
+.client-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.client-search-input {
+  flex: 1;
+  padding: 12px 14px;
+  margin-top: 0;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.client-search-input:focus {
+  outline: none;
+  border-color: #F7932C;
+  box-shadow: 0 0 0 3px rgba(247, 147, 44, 0.1);
+}
+
+.client-clear-btn {
+  padding: 10px 20px;
+  height: 46px;
+  font-size: 14px;
+}
+
+.alpha-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.alpha-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  margin-top: 0;
+  background: white;
+  color: #2c3e50;
+  border: 2px solid #e0e6ed;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alpha-btn:hover {
+  border-color: #F7932C;
+  color: #F7932C;
+  background: #fff9f5;
+  transform: none;
+  box-shadow: none;
+}
+
+.alpha-btn.active {
+  background: linear-gradient(135deg, #F7932C 0%, #E68A1F 100%);
+  border-color: #F7932C;
+  color: white;
+  box-shadow: 0 2px 8px rgba(247, 147, 44, 0.3);
+}
+
+.no-results {
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 16px;
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;

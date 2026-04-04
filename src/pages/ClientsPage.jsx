@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Header from '../components/Header.jsx'
 import { fetchClients } from '../services/clientService.js'
+
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
 export default function ClientsPage() {
   const [clients, setClients] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [activeLetter, setActiveLetter] = useState(null)
 
   useEffect(() => {
     async function loadClients() {
@@ -25,6 +29,40 @@ export default function ClientsPage() {
     loadClients()
   }, [])
 
+  const filteredClients = useMemo(() => {
+    let result = clients
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase()
+      result = result.filter(client =>
+        client.name.toLowerCase().includes(query)
+      )
+    }
+
+    if (activeLetter) {
+      result = result.filter(client => {
+        const trimmed = client.name.trim()
+        if (!trimmed) return false
+        const nameParts = trimmed.split(/\s+/)
+        const lastName = nameParts[nameParts.length - 1]
+        return lastName.toUpperCase().startsWith(activeLetter)
+      })
+    }
+
+    return result
+  }, [clients, searchQuery, activeLetter])
+
+  function handleLetterClick(letter) {
+    setActiveLetter(prev => (prev === letter ? null : letter))
+  }
+
+  function handleClearFilters() {
+    setSearchQuery('')
+    setActiveLetter(null)
+  }
+
+  const hasActiveFilters = searchQuery.trim() !== '' || activeLetter !== null
+
   return (
     <>
       <Header title="Coach Dashboard" />
@@ -34,13 +72,50 @@ export default function ClientsPage() {
           Add Client
         </Link>
 
+        {/* Search & Filter Controls */}
+        <div className="client-search-bar">
+          <input
+            type="search"
+            className="client-search-input"
+            placeholder="Search clients by name..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            aria-label="Search clients"
+          />
+          {hasActiveFilters && (
+            <button
+              type="button"
+              className="btn-secondary client-clear-btn"
+              onClick={handleClearFilters}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="alpha-filter" role="group" aria-label="Filter by last name initial">
+          {ALPHABET.map(letter => (
+            <button
+              key={letter}
+              type="button"
+              className={`alpha-btn${activeLetter === letter ? ' active' : ''}`}
+              onClick={() => handleLetterClick(letter)}
+              aria-pressed={activeLetter === letter}
+            >
+              {letter}
+            </button>
+          ))}
+        </div>
+
         {error && <div className="error-message">{error}</div>}
 
         {loading ? (
           <p>Loading clients...</p>
+        ) : filteredClients.length === 0 ? (
+          <p className="no-results">No clients match your search.</p>
         ) : (
           <ul id="clientList">
-            {clients.map(client => (
+            {filteredClients.map(client => (
               <li key={client.id}>
                 <Link to={`/clients/${client.id}`}>{client.name}</Link>
               </li>
