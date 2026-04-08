@@ -8,7 +8,7 @@ function buildInitialGrid() {
   return Array.from({ length: DATA_ROWS }, () => ({
     colA: '',
     colB: '',
-    sessions: Array(7).fill(''),
+    sessions: Array.from({ length: 7 }, () => ({ checked: false, note: '' })),
   }))
 }
 
@@ -28,16 +28,12 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
     getData: () => ({
       sessions: sessions[0] || { date: '', trainer: '', routine: '' },
       exercises: {
-        nameA: rows[0]?.colA || '',
-        nameB: rows[0]?.colB || '',
-        results: rows
-          .filter(row => row.colA || row.colB || row.sessions.some(s => s !== ''))
-          .map((row, idx) => ({
-            weight: row.sessions[0] || '',
-            reps: row.sessions[1] || '',
-            notes: row.sessions[2] || '',
-            session: idx + 1
-          }))
+        rows: rows.map((row, idx) => ({
+          index: idx,
+          nameA: row.colA,
+          nameB: row.colB,
+          sessions: row.sessions,
+        }))
       }
     })
   }), [sessions, rows])
@@ -68,29 +64,33 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
             let newRows = []
 
             if (exercisesData.rows) {
-              // New format: { rows: [{ index, nameA, nameB }] }
+              // New format: { rows: [{ index, nameA, nameB, sessions? }] }
               newRows = exercisesData.rows.map(row => ({
                 colA: row.nameA || '',
                 colB: row.nameB || '',
-                sessions: Array(7).fill(''),
+                sessions: row.sessions
+                  ? row.sessions.map(s =>
+                      s && typeof s === 'object'
+                        ? { checked: s.checked || false, note: s.note || '' }
+                        : { checked: false, note: typeof s === 'string' ? s : '' }
+                    )
+                  : Array.from({ length: 7 }, () => ({ checked: false, note: '' }))
               }))
             } else if (exercisesData.results) {
               // Old format: { nameA, nameB, results: [{ weight, reps, notes }] }
               newRows = exercisesData.results.map(result => ({
                 colA: exercisesData.nameA || '',
                 colB: exercisesData.nameB || '',
-                sessions: [
-                  `${result.weight || ''}`,
-                  `${result.reps || ''}`,
-                  `${result.notes || ''}`,
-                  '', '', '', ''
-                ]
+                sessions: Array.from({ length: 7 }, (_, i) => ({
+                  checked: false,
+                  note: [result.weight, result.reps, result.notes][i] || ''
+                }))
               }))
             }
 
             // Pad with empty rows to reach DATA_ROWS
             while (newRows.length < DATA_ROWS) {
-              newRows.push({ colA: '', colB: '', sessions: Array(7).fill('') })
+              newRows.push({ colA: '', colB: '', sessions: Array.from({ length: 7 }, () => ({ checked: false, note: '' })) })
             }
 
             setRows(newRows)
@@ -188,13 +188,17 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
   function handleRowChange(rowIdx, field, val) {
     setRows(prev => {
       const next = [...prev]
-      if (field === 'colA' || field === 'colB') {
-        next[rowIdx] = { ...next[rowIdx], [field]: val }
-      } else {
-        const sessions = [...next[rowIdx].sessions]
-        sessions[field] = val
-        next[rowIdx] = { ...next[rowIdx], sessions }
-      }
+      next[rowIdx] = { ...next[rowIdx], [field]: val }
+      return next
+    })
+  }
+
+  function handleSessionChange(rowIdx, sIdx, field, val) {
+    setRows(prev => {
+      const next = [...prev]
+      const sessions = [...next[rowIdx].sessions]
+      sessions[sIdx] = { ...sessions[sIdx], [field]: val }
+      next[rowIdx] = { ...next[rowIdx], sessions }
       return next
     })
   }
@@ -307,13 +311,20 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
               value={row.colB}
               onChange={e => handleRowChange(rIdx, 'colB', e.target.value)}
             />
-            {row.sessions.map((val, sIdx) => (
-              <input
-                key={sIdx}
-                className="span-2"
-                value={val}
-                onChange={e => handleRowChange(rIdx, sIdx, e.target.value)}
-              />
+            {row.sessions.map((cell, sIdx) => (
+              <div key={sIdx} className="session-cell span-2">
+                <input
+                  type="checkbox"
+                  className="session-checkbox"
+                  checked={cell.checked}
+                  onChange={e => handleSessionChange(rIdx, sIdx, 'checked', e.target.checked)}
+                />
+                <input
+                  className="session-note"
+                  value={cell.note}
+                  onChange={e => handleSessionChange(rIdx, sIdx, 'note', e.target.value)}
+                />
+              </div>
             ))}
           </div>
         ))}
