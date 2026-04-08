@@ -536,6 +536,20 @@ li a:hover {
   font-size: 12px;
 }
 
+/* Sticky first column (label / colA) */
+.workout-grid .grid-row input:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+/* Sticky second column (colB) — only for non-wide-cells rows */
+.workout-grid .grid-row:not(.wide-cells) input:nth-child(2) {
+  position: sticky;
+  left: 80px;
+  z-index: 2;
+}
+
 /* Bold right border on first three rows */
 .workout-grid .grid-row:nth-of-type(n) input {
   border-right: 3px solid #2c3e50;
@@ -565,6 +579,10 @@ li a:hover {
     padding: 4px;
     height: 36px;
   }
+
+  .workout-grid .grid-row:not(.wide-cells) input:nth-child(2) {
+    left: 60px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -576,6 +594,10 @@ li a:hover {
     font-size: 16px;
     padding: 3px;
     height: 32px;
+  }
+
+  .workout-grid .grid-row:not(.wide-cells) input:nth-child(2) {
+    left: 50px;
   }
 }
 
