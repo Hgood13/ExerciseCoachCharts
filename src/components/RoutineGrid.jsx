@@ -13,6 +13,12 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
     getData: () => ({
       exercises: rows.map((row, idx) => ({ index: idx, nameA: row.colA, nameB: row.colB }))
     }),
+    loadExercises: (exercises) => {
+      setRows(Array.from({ length: DATA_ROWS }, (_, i) => ({
+        colA: exercises[i]?.nameA || '',
+        colB: exercises[i]?.nameB || ''
+      })))
+    },
     addExercise: (name) => {
       setRows(prev => {
         // Fill colA first (rows 0-16), then colB

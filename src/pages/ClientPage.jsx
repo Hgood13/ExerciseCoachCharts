@@ -13,7 +13,7 @@ export default function ClientPage() {
   const [error, setError] = useState('')
   const [recordNumber, setRecordNumber] = useState(1)
   const [saveMessage, setSaveMessage] = useState('')
-  const [mode, setMode] = useState('view') // 'view' | 'create'
+  const [mode, setMode] = useState('view') // 'view' | 'create' | 'edit-routine'
   const workoutGridRef = useRef(null)
   const routineGridRef = useRef(null)
   const clientInfoRef = useRef(null)
@@ -77,6 +77,47 @@ export default function ClientPage() {
       setTimeout(() => setSaveMessage(''), 3000)
     } catch (err) {
       setError('Failed to save workout. Please try again.')
+      console.error(err)
+    }
+  }
+
+  async function handleSaveRoutine() {
+    setError('')
+
+    if (!routineGridRef.current) {
+      setError('Unable to access routine data')
+      return
+    }
+
+    try {
+      const currentChart = client.charts.find(c => c.record_number === recordNumber)
+      if (!currentChart) {
+        setError('Chart not found')
+        return
+      }
+
+      const { exercises } = routineGridRef.current.getData()
+
+      // Preserve existing sessions, only update exercises
+      await updateChart(currentChart.id, {
+        exercises: JSON.stringify({ rows: exercises })
+      })
+
+      // Update local state
+      setClient(prev => ({
+        ...prev,
+        charts: prev.charts.map(c =>
+          c.id === currentChart.id
+            ? { ...c, exercises: JSON.stringify({ rows: exercises }) }
+            : c
+        )
+      }))
+
+      setMode('view')
+      setSaveMessage('Routine saved!')
+      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (err) {
+      setError('Failed to save routine. Please try again.')
       console.error(err)
     }
   }
@@ -153,6 +194,22 @@ export default function ClientPage() {
           onRecordChange={setRecordNumber}
           charts={client.charts}
         />
+      ) : mode === 'edit-routine' ? (
+        <>
+          <div className="workout-header">
+            <span>The Exercise Coach</span>
+            <span>Edit Routine — Record #{recordNumber}</span>
+            <span>PIN: {client.pin}</span>
+            <span>{client.name}</span>
+          </div>
+          <div className="create-chart-layout">
+            <RoutineGrid
+              ref={routineGridRef}
+              recordNumber={recordNumber}
+            />
+            <WorkoutOptions onSelect={name => routineGridRef.current?.addExercise(name)} />
+          </div>
+        </>
       ) : (
         <>
           <div className="workout-header">
@@ -187,11 +244,33 @@ export default function ClientPage() {
             <Link to="/clients" className="btn-secondary">
               Back to Clients
             </Link>
+            <button className="btn-secondary" onClick={() => {
+              const currentChart = client.charts.find(c => c.record_number === recordNumber)
+              if (currentChart) {
+                const parsed = JSON.parse(currentChart.exercises || '{}')
+                const existingRows = parsed.rows || []
+                setMode('edit-routine')
+                setTimeout(() => routineGridRef.current?.loadExercises(existingRows), 0)
+              } else {
+                setMode('edit-routine')
+              }
+            }}>
+              Edit Routine
+            </button>
             <button className="btn-secondary" onClick={() => setMode('create')}>
               New Chart
             </button>
             <button className="btn-primary" onClick={handleSave}>
               Save Workout
+            </button>
+          </>
+        ) : mode === 'edit-routine' ? (
+          <>
+            <button className="btn-secondary" onClick={() => setMode('view')}>
+              Cancel
+            </button>
+            <button className="btn-primary" onClick={handleSaveRoutine}>
+              Save Routine
             </button>
           </>
         ) : (
