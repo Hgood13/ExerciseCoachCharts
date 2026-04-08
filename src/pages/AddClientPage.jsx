@@ -42,8 +42,8 @@ export default function AddClientPage() {
         exercises: JSON.stringify({ nameA: '', nameB: '', results: [] }),
       })
 
-      // Navigate to the new client's page
-      navigate(`/clients/${newClient.id}`)
+      // Navigate to the clients list
+      navigate('/clients')
     } catch (err) {
       setError('Failed to create client. Please try again.')
       console.error(err)
