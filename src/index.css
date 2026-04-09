@@ -540,6 +540,8 @@ li a:hover {
   padding: 0 6px;
   gap: 5px;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 .workout-grid .session-checkbox {
@@ -586,6 +588,11 @@ li a:hover {
   position: sticky;
   left: 0;
   z-index: 2;
+  background: white;
+}
+
+.workout-grid .grid-row input[readonly]:first-child {
+  background: #f0f0f0;
 }
 
 /* Sticky second column (colB) — only for non-wide-cells rows */
@@ -593,6 +600,11 @@ li a:hover {
   position: sticky;
   left: 80px;
   z-index: 2;
+  background: white;
+}
+
+.workout-grid .grid-row:not(.wide-cells) input[readonly]:nth-child(2) {
+  background: #f0f0f0;
 }
 
 /* Bold right border on rows — exclude note inputs inside session cells */
@@ -618,33 +630,6 @@ li a:hover {
   .workout-grid {
     grid-template-columns: repeat(16, 60px);
   }
-  
-  .workout-grid input {
-    font-size: 16px;
-    padding: 4px;
-    height: 36px;
-  }
-
-  .workout-grid .grid-row:not(.wide-cells) input:nth-child(2) {
-    left: 60px;
-  }
-}
-
-@media (max-width: 480px) {
-  .workout-grid {
-    grid-template-columns: repeat(16, 50px);
-  }
-  
-  .workout-grid input {
-    font-size: 16px;
-    padding: 3px;
-    height: 32px;
-  }
-
-  .workout-grid .grid-row:not(.wide-cells) input:nth-child(2) {
-    left: 50px;
-  }
-}
 
 /* ---------- CREATE CHART LAYOUT ---------- */
 .create-chart-layout {
