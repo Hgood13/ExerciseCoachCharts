@@ -38,7 +38,7 @@ export default function AddClientPage() {
 
       // Create their first empty chart
       await createChart(newClient.id, 1, {
-        sessions: JSON.stringify({ date: '', trainer: '', routine: '' }),
+        sessions: JSON.stringify(Array.from({ length: 14 }, () => ({ date: '', trainer: '', routine: '' }))),
         exercises: JSON.stringify({ nameA: '', nameB: '', results: [] }),
       })
 

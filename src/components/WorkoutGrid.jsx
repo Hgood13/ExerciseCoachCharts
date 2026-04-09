@@ -4,22 +4,26 @@ const TRAINER_OPTIONS = ["Aaron", "Bill", "Brandon", "Megan", "Other"]
 const ROUTINE_OPTIONS = ["A", "B"]
 const DATA_ROWS = 16
 
+const TOTAL_SESSIONS = 14
+const VISIBLE_SESSIONS = 7
+
 function buildInitialGrid() {
   return Array.from({ length: DATA_ROWS }, () => ({
     colA: '',
     colB: '',
-    sessions: Array.from({ length: 7 }, () => ({ checked: false, note: '' })),
+    sessions: Array.from({ length: TOTAL_SESSIONS }, () => ({ checked: false, note: '' })),
   }))
 }
 
 function buildInitialSessions() {
-  return Array.from({ length: 7 }, () => ({ date: '', trainer: '', routine: '' }))
+  return Array.from({ length: TOTAL_SESSIONS }, () => ({ date: '', trainer: '', routine: '' }))
 }
 
 export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, onRecordChange, charts = [] }, ref) {
   const [sessions, setSessions] = useState(buildInitialSessions)
   const [rows, setRows] = useState(buildInitialGrid)
   const [dropdown, setDropdown] = useState(null) // { type, index, rect }
+  const [windowStart, setWindowStart] = useState(0)
 
   const dropdownRef = useRef(null)
 
@@ -56,12 +60,16 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
 
           // Load sessions into the grid
           if (Array.isArray(sessionsData) && sessionsData.length > 0) {
-            // New format: array of 7 session headers
-            const padded = Array.from({ length: 7 }, (_, i) => sessionsData[i] || { date: '', trainer: '', routine: '' })
+            // New format: array of session headers
+            const padded = Array.from({ length: TOTAL_SESSIONS }, (_, i) => sessionsData[i] || { date: '', trainer: '', routine: '' })
             setSessions(padded)
+            const firstEmpty = padded.findIndex(s => !s.date || !s.trainer || !s.routine)
+            const lastIdx = firstEmpty === -1 ? TOTAL_SESSIONS - 1 : firstEmpty
+            setWindowStart(Math.max(0, Math.min(lastIdx - (VISIBLE_SESSIONS - 1), TOTAL_SESSIONS - VISIBLE_SESSIONS)))
           } else if (sessionsData && typeof sessionsData === 'object' && (sessionsData.date || sessionsData.trainer || sessionsData.routine)) {
             // Legacy format: single session object
-            setSessions([sessionsData, ...Array(6).fill({ date: '', trainer: '', routine: '' })])
+            setSessions([sessionsData, ...Array(TOTAL_SESSIONS - 1).fill({ date: '', trainer: '', routine: '' })])
+            setWindowStart(0)
           }
 
           // Load exercises into the rows
@@ -78,15 +86,15 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
                       s && typeof s === 'object'
                         ? { checked: s.checked || false, note: s.note || '' }
                         : { checked: false, note: typeof s === 'string' ? s : '' }
-                    )
-                  : Array.from({ length: 7 }, () => ({ checked: false, note: '' }))
+                    ).concat(Array.from({ length: Math.max(0, TOTAL_SESSIONS - (row.sessions.length || 0)) }, () => ({ checked: false, note: '' })))
+                  : Array.from({ length: TOTAL_SESSIONS }, () => ({ checked: false, note: '' }))
               }))
             } else if (exercisesData.results) {
               // Old format: { nameA, nameB, results: [{ weight, reps, notes }] }
               newRows = exercisesData.results.map(result => ({
                 colA: exercisesData.nameA || '',
                 colB: exercisesData.nameB || '',
-                sessions: Array.from({ length: 7 }, (_, i) => ({
+                sessions: Array.from({ length: TOTAL_SESSIONS }, (_, i) => ({
                   checked: false,
                   note: [result.weight, result.reps, result.notes][i] || ''
                 }))
@@ -95,7 +103,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
 
             // Pad with empty rows to reach DATA_ROWS
             while (newRows.length < DATA_ROWS) {
-              newRows.push({ colA: '', colB: '', sessions: Array.from({ length: 7 }, () => ({ checked: false, note: '' })) })
+              newRows.push({ colA: '', colB: '', sessions: Array.from({ length: TOTAL_SESSIONS }, () => ({ checked: false, note: '' })) })
             }
 
             setRows(newRows)
@@ -236,9 +244,11 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
   const options = dropdown?.type === 'trainer' ? TRAINER_OPTIONS : ROUTINE_OPTIONS
   const selectFn = dropdown?.type === 'trainer' ? selectTrainer : selectRoutine
 
+  /* ---- windowed view ---- */
+  const visibleSessions = sessions.slice(windowStart, windowStart + VISIBLE_SESSIONS)
+
   return (
     <>
-      {/* Workout header bar */}
       <div className="workout-header">
         <span>The Exercise Coach</span>
         <span>Workout Record: {recordNumber ? `#${recordNumber}` : ''}</span>
@@ -251,55 +261,63 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
         {/* Row 1: Date */}
         <div className="grid-row wide-cells bold">
           <input readOnly value="Date" />
-          {sessions.map((s, i) => (
-            <input
-              key={i}
-              value={s.date}
-              onClick={() => handleDateClick(i, s.date)}
-              onChange={e => handleDateChange(i, e.target.value)}
-            />
-          ))}
+          {visibleSessions.map((s, i) => {
+            const absIdx = windowStart + i
+            return (
+              <input
+                key={absIdx}
+                value={s.date}
+                onClick={() => handleDateClick(absIdx, s.date)}
+                onChange={e => handleDateChange(absIdx, e.target.value)}
+              />
+            )
+          })}
         </div>
 
         {/* Row 2: Trainer */}
         <div className="grid-row wide-cells bold">
           <input readOnly value="Trainer" />
-          {sessions.map((s, i) => (
-            <input
-              key={i}
-              value={s.trainer}
-              onClick={e => handleTrainerClick(i, e)}
-              onChange={e => handleTrainerChange(i, e.target.value)}
-              readOnly={false}
-            />
-          ))}
+          {visibleSessions.map((s, i) => {
+            const absIdx = windowStart + i
+            return (
+              <input
+                key={absIdx}
+                value={s.trainer}
+                onClick={e => handleTrainerClick(absIdx, e)}
+                onChange={e => handleTrainerChange(absIdx, e.target.value)}
+              />
+            )
+          })}
         </div>
 
         {/* Row 3: Routine */}
         <div className="grid-row wide-cells bold">
           <input readOnly value="Routine" />
-          {sessions.map((s, i) => (
-            <input
-              key={i}
-              value={s.routine}
-              onClick={e => handleRoutineClick(i, e)}
-              onChange={e => {
-                setSessions(prev => {
-                  const next = [...prev]
-                  next[i] = { ...next[i], routine: e.target.value }
-                  return next
-                })
-              }}
-            />
-          ))}
+          {visibleSessions.map((s, i) => {
+            const absIdx = windowStart + i
+            return (
+              <input
+                key={absIdx}
+                value={s.routine}
+                onClick={e => handleRoutineClick(absIdx, e)}
+                onChange={e => {
+                  setSessions(prev => {
+                    const next = [...prev]
+                    next[absIdx] = { ...next[absIdx], routine: e.target.value }
+                    return next
+                  })
+                }}
+              />
+            )
+          })}
         </div>
 
-        {/* Row 4: Exercise column headers */}
+        {/* Row 4: Session numbering */}
         <div className="grid-row bold">
           <input readOnly value="A" />
           <input readOnly value="B" />
-          {Array(7).fill(null).map((_, i) => (
-            <input key={i} readOnly className="span-2" />
+          {visibleSessions.map((_, i) => (
+            <input key={i} readOnly className="span-2" value={`${windowStart + i + 1} of ${TOTAL_SESSIONS}`} />
           ))}
         </div>
 
@@ -316,21 +334,25 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
               value={row.colB}
               onChange={e => handleRowChange(rIdx, 'colB', e.target.value)}
             />
-            {row.sessions.map((cell, sIdx) => (
-              <div key={sIdx} className="session-cell span-2">
-                <input
-                  type="checkbox"
-                  className="session-checkbox"
-                  checked={cell.checked}
-                  onChange={e => handleSessionChange(rIdx, sIdx, 'checked', e.target.checked)}
-                />
-                <input
-                  className="session-note"
-                  value={cell.note}
-                  onChange={e => handleSessionChange(rIdx, sIdx, 'note', e.target.value)}
-                />
-              </div>
-            ))}
+            {visibleSessions.map((_, i) => {
+              const absIdx = windowStart + i
+              const cell = row.sessions[absIdx] || { checked: false, note: '' }
+              return (
+                <div key={absIdx} className="session-cell span-2">
+                  <input
+                    type="checkbox"
+                    className="session-checkbox"
+                    checked={cell.checked}
+                    onChange={e => handleSessionChange(rIdx, absIdx, 'checked', e.target.checked)}
+                  />
+                  <input
+                    className="session-note"
+                    value={cell.note}
+                    onChange={e => handleSessionChange(rIdx, absIdx, 'note', e.target.value)}
+                  />
+                </div>
+              )
+            })}
           </div>
         ))}
       </div>

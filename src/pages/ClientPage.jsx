@@ -70,6 +70,14 @@ export default function ClientPage() {
         clientInfo && updateClient(clientId, clientInfo)
       ])
 
+      // Update local chart state so WorkoutGrid re-runs its load effect and recalculates windowStart
+      setClient(prev => ({
+        ...prev,
+        charts: prev.charts.map(c =>
+          c.id === currentChart.id ? { ...c, sessions, exercises } : c
+        )
+      }))
+
       setSaveMessage('Workout saved successfully!')
       setTimeout(() => setSaveMessage(''), 3000)
     } catch (err) {
@@ -134,7 +142,7 @@ export default function ClientPage() {
         : 0) + 1
 
       const newChart = await createChart(clientId, newRecordNumber, {
-        sessions: JSON.stringify({ date: '', trainer: '', routine: '' }),
+        sessions: JSON.stringify(Array.from({ length: 14 }, () => ({ date: '', trainer: '', routine: '' }))),
         exercises: JSON.stringify({ rows: exercises }),
       })
 
