@@ -630,6 +630,33 @@ li a:hover {
   .workout-grid {
     grid-template-columns: repeat(16, 60px);
   }
+  
+  .workout-grid input {
+    font-size: 16px;
+    padding: 4px;
+    height: 36px;
+  }
+
+  .workout-grid .grid-row:not(.wide-cells) input:nth-child(2) {
+    left: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .workout-grid {
+    grid-template-columns: repeat(16, 50px);
+  }
+  
+  .workout-grid input {
+    font-size: 16px;
+    padding: 3px;
+    height: 32px;
+  }
+
+  .workout-grid .grid-row:not(.wide-cells) input:nth-child(2) {
+    left: 50px;
+  }
+}
 
 /* ---------- CREATE CHART LAYOUT ---------- */
 .create-chart-layout {
