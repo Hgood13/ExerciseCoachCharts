@@ -26,15 +26,15 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
   /* Expose getData method to parent via ref */
   useImperativeHandle(ref, () => ({
     getData: () => ({
-      sessions: sessions[0] || { date: '', trainer: '', routine: '' },
-      exercises: {
+      sessions: JSON.stringify(sessions),
+      exercises: JSON.stringify({
         rows: rows.map((row, idx) => ({
           index: idx,
           nameA: row.colA,
           nameB: row.colB,
           sessions: row.sessions,
         }))
-      }
+      })
     })
   }), [sessions, rows])
 
@@ -55,7 +55,12 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
             : currentChart.exercises
 
           // Load sessions into the grid
-          if (sessionsData && (sessionsData.date || sessionsData.trainer || sessionsData.routine)) {
+          if (Array.isArray(sessionsData) && sessionsData.length > 0) {
+            // New format: array of 7 session headers
+            const padded = Array.from({ length: 7 }, (_, i) => sessionsData[i] || { date: '', trainer: '', routine: '' })
+            setSessions(padded)
+          } else if (sessionsData && typeof sessionsData === 'object' && (sessionsData.date || sessionsData.trainer || sessionsData.routine)) {
+            // Legacy format: single session object
             setSessions([sessionsData, ...Array(6).fill({ date: '', trainer: '', routine: '' })])
           }
 

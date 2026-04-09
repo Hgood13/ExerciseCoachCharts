@@ -66,10 +66,7 @@ export default function ClientPage() {
       const clientInfo = clientInfoRef.current?.getData()
 
       await Promise.all([
-        updateChart(currentChart.id, {
-          sessions: JSON.stringify(sessions),
-          exercises: JSON.stringify(exercises)
-        }),
+        updateChart(currentChart.id, { sessions, exercises }),
         clientInfo && updateClient(clientId, clientInfo)
       ])
 
