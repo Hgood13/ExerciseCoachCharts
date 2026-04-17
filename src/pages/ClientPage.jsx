@@ -1,15 +1,30 @@
+// These are react hooks that are used for state magament and DOM refs
 import { useState, useEffect, useRef } from 'react'
+
+// Link is for navigation, useParams is for clientId from URL
+// q - Any reason for using link instead of useNavigate like LoginPage?
+// q - How is clientId used?
 import { Link, useParams } from 'react-router-dom'
+
+// The component imports are as they seem, UI React components
 import WorkoutGrid from '../components/WorkoutGrid.jsx'
 import RoutineGrid from '../components/RoutineGrid.jsx'
 import WorkoutOptions from '../components/WorkoutOptions.jsx'
 import ClientInfoCard from '../components/ClientInfoCard.jsx'
+
+// These our our supabase services 
 import { fetchClientWithCharts, updateChart, updateClient, createChart } from '../services/clientService.js'
 
+// This is the main component for the client page
 export default function ClientPage() {
-  const { clientId } = useParams()
+  // First, we have our state variables and refs
+  // Starting with clientId which is obtained from the URL parameters using getParams
+  const { clientId } = useParams()  
+  // Next client data. The client object and a setter function to update it
   const [client, setClient] = useState(null)
+  // Loading state object and setter to indicate whether the client data is being fetched
   const [loading, setLoading] = useState(true)
+  // Error state object and setter to indicate whether there was an error fetching or saving data
   const [error, setError] = useState('')
   const [recordNumber, setRecordNumber] = useState(1)
   const [saveMessage, setSaveMessage] = useState('')

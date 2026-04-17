@@ -476,6 +476,7 @@ li a:hover {
 .workout-grid {
   display: grid;
   grid-template-columns: repeat(16, 80px);
+  //grid-template-columns: repeat(8, 80px);
   grid-template-rows: auto;
   border: 2px solid #2c3e50;
   border-radius: 0;

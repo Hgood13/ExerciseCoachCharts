@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom'
+// Below we have the React hooks that are used on this page
+// useState: stores reactive data. When state changes, the component re-renders. Used here likely for the clients list, loading state, and search/filter input.
+// useEffect: performs side effects in function components. Here, it's used to fetch the clients when the component mounts.
+// useMemo: memoizes expensive calculations. Here, it's used to memoize the filtered clients list based on search and filter criteria.
 import { useState, useEffect, useMemo } from 'react'
+
+// Component imports
 import Header from '../components/Header.jsx'
+
+// supabase service imports
 import { fetchClients } from '../services/clientService.js'
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
