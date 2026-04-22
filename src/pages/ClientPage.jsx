@@ -1,5 +1,5 @@
 // These are react hooks that are used for state magament and DOM refs
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 // Link is for navigation, useParams is for clientId from URL
 // q - Any reason for using link instead of useNavigate like LoginPage?
@@ -29,9 +29,63 @@ export default function ClientPage() {
   const [recordNumber, setRecordNumber] = useState(1)
   const [saveMessage, setSaveMessage] = useState('')
   const [mode, setMode] = useState('view') // 'view' | 'create' | 'edit-routine'
+  const [autoSaveStatus, setAutoSaveStatus] = useState('') // '' | 'saving' | 'saved' | 'error'
   const workoutGridRef = useRef(null)
   const routineGridRef = useRef(null)
   const clientInfoRef = useRef(null)
+  const autoSaveTimer = useRef(null)
+  const pendingNewChartId = useRef(null)
+  const modeRef = useRef(mode)
+  const clientRef = useRef(client)
+  const recordNumberRef = useRef(recordNumber)
+
+  // Keep refs in sync so the debounce callback always sees latest values
+  useEffect(() => { modeRef.current = mode }, [mode])
+  useEffect(() => { clientRef.current = client }, [client])
+  useEffect(() => { recordNumberRef.current = recordNumber }, [recordNumber])
+
+  const handleAutoSave = useCallback(async () => {
+    const currentMode = modeRef.current
+    const currentClient = clientRef.current
+    const currentRecordNumber = recordNumberRef.current
+    if (!currentClient?.charts) return
+    const currentChart = currentClient.charts.find(c => c.record_number === currentRecordNumber)
+    if (!currentChart) return
+
+    try {
+      setAutoSaveStatus('saving')
+      if (currentMode === 'view' && workoutGridRef.current) {
+        const { sessions, exercises, sessionExercises } = workoutGridRef.current.getData()
+        await saveChartData(currentChart.id, { sessions, exercises, sessionExercises })
+      } else if ((currentMode === 'edit-routine' || currentMode === 'create') && routineGridRef.current) {
+        const chartId = currentMode === 'create'
+          ? pendingNewChartId.current || currentChart?.id
+          : currentChart?.id
+        if (!chartId) return
+        const { exercises } = routineGridRef.current.getData()
+        await saveChartData(chartId, { exercises })
+        setClient(prev => ({
+          ...prev,
+          charts: prev.charts.map(c =>
+            c.id === chartId
+              ? { ...c, chart_exercises: exercises.map(e => ({ chart_id: chartId, ...e })) }
+              : c
+          )
+        }))
+      }
+      setAutoSaveStatus('saved')
+      setTimeout(() => setAutoSaveStatus(''), 2000)
+    } catch (err) {
+      console.error('Auto-save failed:', err)
+      setAutoSaveStatus('error')
+      setTimeout(() => setAutoSaveStatus(''), 3000)
+    }
+  }, [])
+
+  const handleDirty = useCallback(() => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
+    autoSaveTimer.current = setTimeout(handleAutoSave, 4000)
+  }, [handleAutoSave])
 
   // Fetch client and their charts when component mounts or clientId changes
   useEffect(() => {
@@ -57,6 +111,7 @@ export default function ClientPage() {
   }, [clientId])
 
   async function handleSave() {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
     setError('')
 
     if (!client || !client.charts || client.charts.length === 0) {
@@ -109,6 +164,7 @@ export default function ClientPage() {
   }
 
   async function handleSaveRoutine() {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
     setError('')
 
     if (!routineGridRef.current) {
@@ -147,32 +203,33 @@ export default function ClientPage() {
   }
 
   async function handleSaveNewChart() {
-    setError('')
-
-    if (!routineGridRef.current) {
-      setError('Unable to access routine data')
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
+    if (!routineGridRef.current) return
+    const chartId = pendingNewChartId.current || client.charts?.find(c => c.record_number === recordNumber)?.id
+    if (!chartId) {
+      setError('Chart not found — please try again.')
       return
     }
-
     try {
       const { exercises } = routineGridRef.current.getData()
-      const newRecordNumber = (client.charts?.length > 0
-        ? Math.max(...client.charts.map(c => c.record_number))
-        : 0) + 1
-
-      const newChart = await createChart(clientId, newRecordNumber)
-      await saveChartData(newChart.id, { exercises })
-
-      // Update local state with the new chart
-      setClient(prev => ({ ...prev, charts: [...(prev.charts || []), newChart] }))
-      setRecordNumber(newRecordNumber)
-      setMode('view')
-      setSaveMessage('New chart created!')
-      setTimeout(() => setSaveMessage(''), 3000)
+      await saveChartData(chartId, { exercises })
+      setClient(prev => ({
+        ...prev,
+        charts: prev.charts.map(c =>
+          c.id === chartId
+            ? { ...c, chart_exercises: exercises.map(e => ({ chart_id: chartId, ...e })) }
+            : c
+        )
+      }))
+      pendingNewChartId.current = null
     } catch (err) {
-      setError('Failed to create chart. Please try again.')
-      console.error(err)
+      setError('Failed to save new chart routine.')
+      console.error('Failed to save new chart routine:', err)
+      return
     }
+    setMode('view')
+    setSaveMessage('New chart created!')
+    setTimeout(() => setSaveMessage(''), 3000)
   }
 
   if (loading) {
@@ -215,6 +272,7 @@ export default function ClientPage() {
           recordNumber={recordNumber}
           onRecordChange={setRecordNumber}
           charts={client.charts}
+          onDirty={handleDirty}
         />
       ) : mode === 'edit-routine' ? (
         <>
@@ -228,6 +286,7 @@ export default function ClientPage() {
             <RoutineGrid
               ref={routineGridRef}
               recordNumber={recordNumber}
+              onDirty={handleDirty}
             />
             <WorkoutOptions onSelect={name => routineGridRef.current?.addExercise(name)} />
           </div>
@@ -236,22 +295,15 @@ export default function ClientPage() {
         <>
           <div className="workout-header">
             <span>The Exercise Coach</span>
-            <span>New Routine — Record #{
-              (client.charts?.length > 0
-                ? Math.max(...client.charts.map(c => c.record_number))
-                : 0) + 1
-            }</span>
+            <span>New Routine — Record #{recordNumber}</span>
             <span>PIN: {client.pin}</span>
             <span>{client.name}</span>
           </div>
           <div className="create-chart-layout">
             <RoutineGrid
               ref={routineGridRef}
-              recordNumber={
-                (client.charts?.length > 0
-                  ? Math.max(...client.charts.map(c => c.record_number))
-                  : 0) + 1
-              }
+              recordNumber={recordNumber}
+              onDirty={handleDirty}
             />
             <WorkoutOptions onSelect={name => routineGridRef.current?.addExercise(name)} />
           </div>
@@ -285,7 +337,16 @@ export default function ClientPage() {
             }}>
               Edit Routine
             </button>
-            <button className="btn-secondary" onClick={() => setMode('create')}>
+            <button className="btn-secondary" onClick={async () => {
+              const newRecordNumber = (client.charts?.length > 0
+                ? Math.max(...client.charts.map(c => c.record_number))
+                : 0) + 1
+              const newChart = await createChart(clientId, newRecordNumber)
+              pendingNewChartId.current = newChart.id
+              setClient(prev => ({ ...prev, charts: [...(prev.charts || []), newChart] }))
+              setRecordNumber(newRecordNumber)
+              setMode('create')
+            }}>
               New Chart
             </button>
             <button className="btn-primary" onClick={handleSave}>
@@ -313,6 +374,9 @@ export default function ClientPage() {
         )}
       </div>
 
+      {autoSaveStatus === 'saving' && <p className="save-status show">Saving...</p>}
+      {autoSaveStatus === 'saved' && <p className="save-status show">Saved ✓</p>}
+      {autoSaveStatus === 'error' && <p className="error-message">Auto-save failed</p>}
       {saveMessage && <p className="save-status show">{saveMessage}</p>}
       {error && <p className="error-message">{error}</p>}
     </div>

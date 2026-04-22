@@ -6,7 +6,7 @@ function buildInitialRows() {
   return Array.from({ length: DATA_ROWS }, () => ({ colA: '', colB: '' }))
 }
 
-export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }, ref) {
+export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber, onDirty }, ref) {
   const [rows, setRows] = useState(buildInitialRows)
 
   useImperativeHandle(ref, () => ({
@@ -22,16 +22,17 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
     },
     addExercise: (name) => {
       setRows(prev => {
-        // Fill colA first (rows 0-16), then colB
         const next = prev.map(r => ({ ...r }))
         const colAIdx = next.findIndex(r => !r.colA)
         if (colAIdx !== -1) {
           next[colAIdx] = { ...next[colAIdx], colA: name }
+          onDirty?.()
           return next
         }
         const colBIdx = next.findIndex(r => !r.colB)
         if (colBIdx !== -1) {
           next[colBIdx] = { ...next[colBIdx], colB: name }
+          onDirty?.()
         }
         return next
       })
@@ -44,6 +45,7 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
       next[rowIdx] = { ...next[rowIdx], [field]: val }
       return next
     })
+    onDirty?.()
   }
 
   return (

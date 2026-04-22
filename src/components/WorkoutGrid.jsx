@@ -19,7 +19,7 @@ function buildInitialSessions() {
   return Array.from({ length: TOTAL_SESSIONS }, () => ({ date: '', trainer: '', routine: '' }))
 }
 
-export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, onRecordChange, charts = [] }, ref) {
+export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, onRecordChange, charts = [], onDirty }, ref) {
   const [sessions, setSessions] = useState(buildInitialSessions)
   const [rows, setRows] = useState(buildInitialGrid)
   const [dropdown, setDropdown] = useState(null) // { type, index, rect }
@@ -180,6 +180,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
         next[idx] = { ...next[idx], date: todayFormatted }
         return next
       })
+      onDirty?.()
     }
   }
 
@@ -189,6 +190,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
       next[idx] = { ...next[idx], date: val }
       return next
     })
+    onDirty?.()
   }
 
   function handleTrainerClick(idx, e) {
@@ -215,6 +217,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
         return next
       })
     }
+    onDirty?.()
     closeDropdown()
   }
 
@@ -224,6 +227,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
       next[idx] = { ...next[idx], routine: value }
       return next
     })
+    onDirty?.()
     closeDropdown()
   }
 
@@ -233,6 +237,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
       next[idx] = { ...next[idx], trainer: val }
       return next
     })
+    onDirty?.()
   }
 
   /* ---- data row handlers ---- */
@@ -242,6 +247,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
       next[rowIdx] = { ...next[rowIdx], [field]: val }
       return next
     })
+    onDirty?.()
   }
 
   function handleSessionChange(rowIdx, sIdx, field, val) {
@@ -252,6 +258,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
       next[rowIdx] = { ...next[rowIdx], sessions }
       return next
     })
+    onDirty?.()
   }
 
   /* ---- new chart ---- */
@@ -344,6 +351,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
                     next[absIdx] = { ...next[absIdx], routine: e.target.value }
                     return next
                   })
+                  onDirty?.()
                 }}
               />
             )
