@@ -11,12 +11,13 @@ export default forwardRef(function RoutineGrid({ clientName, pin, recordNumber }
 
   useImperativeHandle(ref, () => ({
     getData: () => ({
-      exercises: rows.map((row, idx) => ({ index: idx, nameA: row.colA, nameB: row.colB }))
+      exercises: rows.map((row, idx) => ({ exercise_index: idx, routine_a: row.colA, routine_b: row.colB }))
     }),
     loadExercises: (exercises) => {
       setRows(Array.from({ length: DATA_ROWS }, (_, i) => ({
-        colA: exercises[i]?.nameA || '',
-        colB: exercises[i]?.nameB || ''
+        // support both new (routine_a/routine_b) and legacy (nameA/nameB) shapes
+        colA: exercises[i]?.routine_a ?? exercises[i]?.nameA ?? '',
+        colB: exercises[i]?.routine_b ?? exercises[i]?.nameB ?? '',
       })))
     },
     addExercise: (name) => {

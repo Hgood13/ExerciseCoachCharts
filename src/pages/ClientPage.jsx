@@ -13,7 +13,7 @@ import WorkoutOptions from '../components/WorkoutOptions.jsx'
 import ClientInfoCard from '../components/ClientInfoCard.jsx'
 
 // These our our supabase services 
-import { fetchClientWithCharts, updateChart, updateClient, createChart } from '../services/clientService.js'
+import { fetchClientWithCharts, updateClient, createChart, saveChartData } from '../services/clientService.js'
 
 // This is the main component for the client page
 export default function ClientPage() {
@@ -76,20 +76,27 @@ export default function ClientPage() {
         return
       }
 
-      const { sessions, exercises } = workoutGridRef.current.getData()
+      const { sessions, exercises, sessionExercises } = workoutGridRef.current.getData()
 
       const clientInfo = clientInfoRef.current?.getData()
 
       await Promise.all([
-        updateChart(currentChart.id, { sessions, exercises }),
+        saveChartData(currentChart.id, { sessions, exercises, sessionExercises }),
         clientInfo && updateClient(clientId, clientInfo)
       ])
 
-      // Update local chart state so WorkoutGrid re-runs its load effect and recalculates windowStart
+      // Update local chart state so WorkoutGrid re-runs its load effect
       setClient(prev => ({
         ...prev,
         charts: prev.charts.map(c =>
-          c.id === currentChart.id ? { ...c, sessions, exercises } : c
+          c.id === currentChart.id
+            ? {
+                ...c,
+                chart_sessions: sessions.map(s => ({ chart_id: c.id, ...s })),
+                chart_exercises: exercises.map(e => ({ chart_id: c.id, ...e })),
+                chart_session_exercises: sessionExercises.map(se => ({ chart_id: c.id, ...se })),
+              }
+            : c
         )
       }))
 
@@ -118,17 +125,14 @@ export default function ClientPage() {
 
       const { exercises } = routineGridRef.current.getData()
 
-      // Preserve existing sessions, only update exercises
-      await updateChart(currentChart.id, {
-        exercises: JSON.stringify({ rows: exercises })
-      })
+      await saveChartData(currentChart.id, { exercises })
 
       // Update local state
       setClient(prev => ({
         ...prev,
         charts: prev.charts.map(c =>
           c.id === currentChart.id
-            ? { ...c, exercises: JSON.stringify({ rows: exercises }) }
+            ? { ...c, chart_exercises: exercises.map(e => ({ chart_id: c.id, ...e })) }
             : c
         )
       }))
@@ -156,10 +160,8 @@ export default function ClientPage() {
         ? Math.max(...client.charts.map(c => c.record_number))
         : 0) + 1
 
-      const newChart = await createChart(clientId, newRecordNumber, {
-        sessions: JSON.stringify(Array.from({ length: 14 }, () => ({ date: '', trainer: '', routine: '' }))),
-        exercises: JSON.stringify({ rows: exercises }),
-      })
+      const newChart = await createChart(clientId, newRecordNumber)
+      await saveChartData(newChart.id, { exercises })
 
       // Update local state with the new chart
       setClient(prev => ({ ...prev, charts: [...(prev.charts || []), newChart] }))
@@ -267,10 +269,16 @@ export default function ClientPage() {
             <button className="btn-secondary" onClick={() => {
               const currentChart = client.charts.find(c => c.record_number === recordNumber)
               if (currentChart) {
-                const parsed = JSON.parse(currentChart.exercises || '{}')
-                const existingRows = parsed.rows || []
+                // Prefer new normalized exercises, fall back to legacy blob
+                let exercisesToLoad = currentChart.chart_exercises || []
+                if (exercisesToLoad.length === 0 && currentChart.exercises) {
+                  try {
+                    const parsed = JSON.parse(currentChart.exercises)
+                    exercisesToLoad = parsed.rows || []
+                  } catch { exercisesToLoad = [] }
+                }
                 setMode('edit-routine')
-                setTimeout(() => routineGridRef.current?.loadExercises(existingRows), 0)
+                setTimeout(() => routineGridRef.current?.loadExercises(exercisesToLoad), 0)
               } else {
                 setMode('edit-routine')
               }

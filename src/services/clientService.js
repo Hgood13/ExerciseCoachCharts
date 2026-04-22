@@ -65,10 +65,11 @@ export async function fetchClientWithCharts(clientId) {
         charts (
           id,
           record_number,
-          sessions,
-          exercises,
           created_at,
-          updated_at
+          updated_at,
+          chart_sessions ( session_index, date, trainer, routine ),
+          chart_exercises ( exercise_index, routine_a, routine_b ),
+          chart_session_exercises ( session_index, exercise_index, checked, note )
         )
       `)
       .eq('id', clientId)
@@ -91,15 +92,13 @@ export async function fetchClientWithCharts(clientId) {
  * @param {Object} chartData - Chart data (sessions and exercises)
  * @returns {Promise<Object>} Created chart object
  */
-export async function createChart(clientId, recordNumber, chartData = {}) {
+export async function createChart(clientId, recordNumber) {
   try {
     const { data, error } = await supabase
       .from('charts')
       .insert({
         client_id: clientId,
         record_number: recordNumber,
-        sessions: chartData.sessions || [],
-        exercises: chartData.exercises || [],
       })
       .select()
       .single()
@@ -114,25 +113,41 @@ export async function createChart(clientId, recordNumber, chartData = {}) {
 }
 
 /**
- * Update an existing chart
+ * Save chart session and exercise data to the normalized tables
  * @param {string} chartId - The UUID of the chart
- * @param {Object} chartData - Updated chart data (sessions and/or exercises)
- * @returns {Promise<Object>} Updated chart object
+ * @param {Object} data - { sessions, exercises, sessionExercises } arrays
  */
-export async function updateChart(chartId, chartData) {
+export async function saveChartData(chartId, { sessions, exercises, sessionExercises }) {
   try {
-    const { data, error } = await supabase
-      .from('charts')
-      .update(chartData)
-      .eq('id', chartId)
-      .select()
-      .single()
+    const ops = []
 
-    if (error) throw error
+    if (sessions) {
+      const rows = sessions.map(s => ({ chart_id: chartId, ...s }))
+      ops.push(
+        supabase.from('chart_sessions').upsert(rows, { onConflict: 'chart_id,session_index' })
+      )
+    }
 
-    return data
+    if (exercises) {
+      const rows = exercises.map(e => ({ chart_id: chartId, ...e }))
+      ops.push(
+        supabase.from('chart_exercises').upsert(rows, { onConflict: 'chart_id,exercise_index' })
+      )
+    }
+
+    if (sessionExercises) {
+      const rows = sessionExercises.map(se => ({ chart_id: chartId, ...se }))
+      ops.push(
+        supabase.from('chart_session_exercises').upsert(rows, { onConflict: 'chart_id,session_index,exercise_index' })
+      )
+    }
+
+    const results = await Promise.all(ops)
+    for (const { error } of results) {
+      if (error) throw error
+    }
   } catch (error) {
-    console.error('Error updating chart:', error)
+    console.error('Error saving chart data:', error)
     throw error
   }
 }
