@@ -53,7 +53,7 @@ export default function AddClientPage() {
 
   return (
     <>
-      <Header title="Coach Dashboard" />
+      <Header title="Coach Dashboard" showSignOut />
 
       <div className="container">
         <div className="page-header">

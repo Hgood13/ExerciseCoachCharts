@@ -163,6 +163,21 @@ li a:hover {
   gap: 24px;
 }
 
+.sign-out-btn {
+  margin-left: auto;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+}
+
+.sign-out-btn:hover {
+  background: #f0f0f0;
+}
+
 .logo-section {
   flex-shrink: 0;
 }

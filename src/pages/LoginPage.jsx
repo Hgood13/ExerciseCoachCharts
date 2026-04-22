@@ -1,25 +1,29 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header.jsx'
-import { validCredentials } from '../data/clients.js'
+import { supabase } from '../services/supabase.js'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    const isValid = validCredentials.some(
-      c => c.username === username.trim() && c.password === password
-    )
-    if (isValid) {
-      setError('')
-      navigate('/clients')
-    } else {
-      setError('Username or password is incorrect. Please try again.')
+    setLoading(true)
+    setError('')
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    })
+    setLoading(false)
+    if (authError) {
+      setError('Email or password is incorrect. Please try again.')
       setPassword('')
+    } else {
+      navigate('/clients')
     }
   }
 
@@ -27,11 +31,6 @@ export default function LoginPage() {
     <>
       <Header title="The Exercise Coach" />
 
-      {/*
-        MVP NOTE:
-        This is mock authentication.
-        The goal is to demonstrate flow, not security.
-      */}
       <div className="login-wrapper">
         {/* Left Image */}
         <div className="login-image-left">
@@ -53,11 +52,11 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit}>
               <label>
-                Username
+                Email
                 <input
-                  type="text"
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   required
                 />
               </label>
@@ -72,7 +71,9 @@ export default function LoginPage() {
                 />
               </label>
 
-              <button type="submit">Sign In</button>
+              <button type="submit" disabled={loading}>
+                {loading ? 'Signing in…' : 'Sign In'}
+              </button>
             </form>
           </div>
         </div>

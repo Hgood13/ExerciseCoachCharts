@@ -73,7 +73,7 @@ export default function ClientsPage() {
 
   return (
     <>
-      <Header title="Coach Dashboard" />
+      <Header title="Coach Dashboard" showSignOut />
 
       <div className="container">
         <Link to="/clients/add" id="addClientBtn" className="btn-primary">
