@@ -314,26 +314,37 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
     <>
       <div className="workout-header">
         <span>The Exercise Coach</span>
-        <span
+        <button
           ref={chartDropdownTriggerRef}
           className="record-number-trigger"
           onClick={() => setShowChartDropdown(prev => !prev)}
-          title="Click to switch chart"
+          aria-haspopup="menu"
+          aria-expanded={showChartDropdown}
+          aria-label={`Workout Record #${recordNumber}. Click to switch chart`}
         >
           Workout Record: {recordNumber ? `#${recordNumber}` : ''}
-          {charts.length > 1 && <span className="record-number-arrow">{showChartDropdown ? '▲' : '▼'}</span>}
-        </span>
+          {charts.length > 1 && <span className="record-number-arrow" aria-hidden="true">{showChartDropdown ? '▲' : '▼'}</span>}
+        </button>
         {showChartDropdown && charts.length > 0 && (
-          <div ref={chartDropdownRef} className="chart-selector-dropdown">
+          <div ref={chartDropdownRef} className="chart-selector-dropdown" role="menu">
             {[...charts]
               .sort((a, b) => a.record_number - b.record_number)
               .map(chart => (
                 <div
                   key={chart.id}
                   className={`chart-selector-option${chart.record_number === recordNumber ? ' chart-selector-option--active' : ''}`}
+                  role="menuitem"
+                  tabIndex={0}
                   onClick={() => {
                     onRecordChange?.(chart.record_number)
                     setShowChartDropdown(false)
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onRecordChange?.(chart.record_number)
+                      setShowChartDropdown(false)
+                    }
                   }}
                 >
                   Record #{chart.record_number}
