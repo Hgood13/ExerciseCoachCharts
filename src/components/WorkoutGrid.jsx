@@ -4,6 +4,7 @@ const TRAINER_OPTIONS = ["Aaron", "Bill", "Brandon", "Megan", "Other"]
 const ROUTINE_OPTIONS = ["A", "B"]
 const DATA_ROWS = 16
 
+
 const TOTAL_SESSIONS = 14
 const VISIBLE_SESSIONS = 7
 
@@ -24,8 +25,11 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
   const [rows, setRows] = useState(buildInitialGrid)
   const [dropdown, setDropdown] = useState(null) // { type, index, rect }
   const [windowStart, setWindowStart] = useState(0)
+  const [showChartDropdown, setShowChartDropdown] = useState(false)
 
   const dropdownRef = useRef(null)
+  const chartDropdownRef = useRef(null)
+  const chartDropdownTriggerRef = useRef(null)
 
   /* Expose getData method to parent via ref */
   useImperativeHandle(ref, () => ({
@@ -172,6 +176,20 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
     return () => document.removeEventListener('mousedown', handleClick)
   }, [closeDropdown])
 
+  /* Close chart selector dropdown when clicking outside */
+  useEffect(() => {
+    function handleClick(e) {
+      if (
+        chartDropdownRef.current && !chartDropdownRef.current.contains(e.target) &&
+        chartDropdownTriggerRef.current && !chartDropdownTriggerRef.current.contains(e.target)
+      ) {
+        setShowChartDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
   /* ---- session handlers ---- */
   function handleDateClick(idx, currentVal) {
     if (currentVal === '') {
@@ -296,7 +314,44 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
     <>
       <div className="workout-header">
         <span>The Exercise Coach</span>
-        <span>Workout Record: {recordNumber ? `#${recordNumber}` : ''}</span>
+        <button
+          ref={chartDropdownTriggerRef}
+          className="record-number-trigger"
+          onClick={() => setShowChartDropdown(prev => !prev)}
+          aria-haspopup="menu"
+          aria-expanded={showChartDropdown}
+          aria-label={`Workout Record #${recordNumber}. Click to switch chart`}
+        >
+          Workout Record: {recordNumber ? `#${recordNumber}` : ''}
+          {charts.length > 1 && <span className="record-number-arrow" aria-hidden="true">{showChartDropdown ? '▲' : '▼'}</span>}
+        </button>
+        {showChartDropdown && charts.length > 0 && (
+          <div ref={chartDropdownRef} className="chart-selector-dropdown" role="menu">
+            {[...charts]
+              .sort((a, b) => a.record_number - b.record_number)
+              .map(chart => (
+                <div
+                  key={chart.id}
+                  className={`chart-selector-option${chart.record_number === recordNumber ? ' chart-selector-option--active' : ''}`}
+                  role="menuitem"
+                  tabIndex={0}
+                  onClick={() => {
+                    onRecordChange?.(chart.record_number)
+                    setShowChartDropdown(false)
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onRecordChange?.(chart.record_number)
+                      setShowChartDropdown(false)
+                    }
+                  }}
+                >
+                  Record #{chart.record_number}
+                </div>
+              ))}
+          </div>
+        )}
         <span>PIN: {pin}</span>
         <span>{clientName}</span>
       </div>
