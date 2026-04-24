@@ -79,11 +79,12 @@ src/
 
 ### Environment Variables
 
-Create a `.env.local` file in the project root:
+Create a `.env` file in the project root:
 
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_SENTRY_DSN=https://your-sentry-dsn
 ```
 
 ### Install & Run
@@ -98,6 +99,10 @@ npm run dev
 ```bash
 npm run build
 ```
+or for dev
+```bash
+npm run deev
+```
 
 ---
 
@@ -111,4 +116,4 @@ The app is deployed on **Vercel**. The `vercel.json` config rewrites all routes 
 }
 ```
 
-Set the environment variables (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) in your Vercel project settings.
+Set the environment variables (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_SENTRY_DSN`) in your Vercel project settings.
