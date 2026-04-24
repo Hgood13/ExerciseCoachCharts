@@ -835,8 +835,9 @@ li a:hover {
   border-radius: 6px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   min-width: 160px;
+  max-height: 220px;
+  overflow-y: auto;
   z-index: 1000;
-  overflow: hidden;
 }
 
 .chart-selector-option {

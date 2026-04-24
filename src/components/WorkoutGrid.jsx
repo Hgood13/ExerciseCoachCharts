@@ -328,7 +328,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
         {showChartDropdown && charts.length > 0 && (
           <div ref={chartDropdownRef} className="chart-selector-dropdown" role="menu">
             {[...charts]
-              .sort((a, b) => a.record_number - b.record_number)
+              .sort((a, b) => b.record_number - a.record_number)
               .map(chart => (
                 <div
                   key={chart.id}
