@@ -62,97 +62,36 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
       const currentChart = charts.find(c => c.record_number === recordNumber)
       
       if (currentChart) {
-        try {
-          const hasNewSchema =
-            currentChart.chart_sessions?.length > 0 ||
-            currentChart.chart_exercises?.length > 0 ||
-            currentChart.chart_session_exercises?.length > 0
+        const sessionMap = {}
+        ;(currentChart.chart_sessions || []).forEach(s => { sessionMap[s.session_index] = s })
+        const newSessions = Array.from({ length: TOTAL_SESSIONS }, (_, i) =>
+          sessionMap[i] ? { date: sessionMap[i].date, trainer: sessionMap[i].trainer, routine: sessionMap[i].routine }
+                        : { date: '', trainer: '', routine: '' }
+        )
+        setSessions(newSessions)
 
-          if (hasNewSchema) {
-            // ---- New normalized schema ----
-            const sessionMap = {}
-            ;(currentChart.chart_sessions || []).forEach(s => { sessionMap[s.session_index] = s })
-            const newSessions = Array.from({ length: TOTAL_SESSIONS }, (_, i) =>
-              sessionMap[i] ? { date: sessionMap[i].date, trainer: sessionMap[i].trainer, routine: sessionMap[i].routine }
-                            : { date: '', trainer: '', routine: '' }
-            )
-            setSessions(newSessions)
+        const exerciseMap = {}
+        ;(currentChart.chart_exercises || []).forEach(e => { exerciseMap[e.exercise_index] = e })
 
-            const exerciseMap = {}
-            ;(currentChart.chart_exercises || []).forEach(e => { exerciseMap[e.exercise_index] = e })
+        const seMap = {}
+        ;(currentChart.chart_session_exercises || []).forEach(se => {
+          if (!seMap[se.exercise_index]) seMap[se.exercise_index] = {}
+          seMap[se.exercise_index][se.session_index] = se
+        })
 
-            const seMap = {}
-            ;(currentChart.chart_session_exercises || []).forEach(se => {
-              if (!seMap[se.exercise_index]) seMap[se.exercise_index] = {}
-              seMap[se.exercise_index][se.session_index] = se
-            })
+        const newRows = Array.from({ length: DATA_ROWS }, (_, i) => ({
+          colA: exerciseMap[i]?.routine_a || '',
+          colB: exerciseMap[i]?.routine_b || '',
+          sessions: Array.from({ length: TOTAL_SESSIONS }, (_, j) => ({
+            checked: seMap[i]?.[j]?.checked || false,
+            note: seMap[i]?.[j]?.note || '',
+          })),
+        }))
+        setRows(newRows)
 
-            const newRows = Array.from({ length: DATA_ROWS }, (_, i) => ({
-              colA: exerciseMap[i]?.routine_a || '',
-              colB: exerciseMap[i]?.routine_b || '',
-              sessions: Array.from({ length: TOTAL_SESSIONS }, (_, j) => ({
-                checked: seMap[i]?.[j]?.checked || false,
-                note: seMap[i]?.[j]?.note || '',
-              })),
-            }))
-            setRows(newRows)
-
-            const firstEmpty = newSessions.findIndex(s => !s.date && !s.trainer && !s.routine)
-            const lastIdx = firstEmpty === -1 ? TOTAL_SESSIONS - 1 : firstEmpty
-            setWindowStart(Math.max(0, Math.min(lastIdx - (VISIBLE_SESSIONS - 1), TOTAL_SESSIONS - VISIBLE_SESSIONS)))
-          } else {
-            // ---- Legacy blob fallback ----
-            const sessionsData = typeof currentChart.sessions === 'string'
-              ? JSON.parse(currentChart.sessions)
-              : currentChart.sessions
-            const exercisesData = typeof currentChart.exercises === 'string'
-              ? JSON.parse(currentChart.exercises)
-              : currentChart.exercises
-
-            if (Array.isArray(sessionsData) && sessionsData.length > 0) {
-              const padded = Array.from({ length: TOTAL_SESSIONS }, (_, i) => sessionsData[i] || { date: '', trainer: '', routine: '' })
-              setSessions(padded)
-              const firstEmpty = padded.findIndex(s => !s.date || !s.trainer || !s.routine)
-              const lastIdx = firstEmpty === -1 ? TOTAL_SESSIONS - 1 : firstEmpty
-              setWindowStart(Math.max(0, Math.min(lastIdx - (VISIBLE_SESSIONS - 1), TOTAL_SESSIONS - VISIBLE_SESSIONS)))
-            } else if (sessionsData && typeof sessionsData === 'object' && (sessionsData.date || sessionsData.trainer || sessionsData.routine)) {
-              setSessions([sessionsData, ...Array(TOTAL_SESSIONS - 1).fill({ date: '', trainer: '', routine: '' })])
-              setWindowStart(0)
-            }
-
-            if (exercisesData) {
-              let newRows = []
-              if (exercisesData.rows) {
-                newRows = exercisesData.rows.map(row => ({
-                  colA: row.nameA || '',
-                  colB: row.nameB || '',
-                  sessions: row.sessions
-                    ? row.sessions.map(s =>
-                        s && typeof s === 'object'
-                          ? { checked: s.checked || false, note: s.note || '' }
-                          : { checked: false, note: typeof s === 'string' ? s : '' }
-                      ).concat(Array.from({ length: Math.max(0, TOTAL_SESSIONS - (row.sessions.length || 0)) }, () => ({ checked: false, note: '' })))
-                    : Array.from({ length: TOTAL_SESSIONS }, () => ({ checked: false, note: '' }))
-                }))
-              } else if (exercisesData.results) {
-                newRows = exercisesData.results.map(result => ({
-                  colA: exercisesData.nameA || '',
-                  colB: exercisesData.nameB || '',
-                  sessions: Array.from({ length: TOTAL_SESSIONS }, (_, i) => ({
-                    checked: false,
-                    note: [result.weight, result.reps, result.notes][i] || ''
-                  }))
-                }))
-              }
-              while (newRows.length < DATA_ROWS) {
-                newRows.push({ colA: '', colB: '', sessions: Array.from({ length: TOTAL_SESSIONS }, () => ({ checked: false, note: '' })) })
-              }
-              setRows(newRows)
-            }
-          }
-        } catch (err) {
-          console.error('Error parsing chart data:', err)
-        }
+        const firstEmpty = newSessions.findIndex(s => !s.date && !s.trainer && !s.routine)
+        const lastIdx = firstEmpty === -1 ? TOTAL_SESSIONS - 1 : firstEmpty
+        setWindowStart(Math.max(0, Math.min(lastIdx - (VISIBLE_SESSIONS - 1), TOTAL_SESSIONS - VISIBLE_SESSIONS)))
       }
     }
   }, [recordNumber, charts])
