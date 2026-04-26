@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react'
 
-const TRAINER_OPTIONS = ["Aaron", "Bill", "Brandon", "Megan", "Other"]
+const TRAINER_OPTIONS = ["Aaron", "Bill", "Brandon", "Brendon", "McKenna", "Megan", "Olivia", "Other"]
 const ROUTINE_OPTIONS = ["A", "B"]
 const DATA_ROWS = 16
 
@@ -30,6 +30,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
   const dropdownRef = useRef(null)
   const chartDropdownRef = useRef(null)
   const chartDropdownTriggerRef = useRef(null)
+  const trainerInputRefs = useRef({})
 
   /* Expose getData method to parent via ref */
   useImperativeHandle(ref, () => ({
@@ -167,6 +168,10 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
         next[idx] = { ...next[idx], trainer: '' }
         return next
       })
+      closeDropdown()
+      onDirty?.()
+      setTimeout(() => trainerInputRefs.current[idx]?.focus(), 0)
+      return
     } else {
       setSessions(prev => {
         const next = [...prev]
@@ -321,6 +326,7 @@ export default forwardRef(function WorkoutGrid({ clientName, pin, recordNumber, 
             return (
               <input
                 key={absIdx}
+                ref={el => trainerInputRefs.current[absIdx] = el}
                 value={s.trainer}
                 onClick={e => handleTrainerClick(absIdx, e)}
                 onChange={e => handleTrainerChange(absIdx, e.target.value)}
