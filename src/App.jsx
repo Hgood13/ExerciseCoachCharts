@@ -18,9 +18,16 @@ export default function App() {
   const [needsPasswordSetup, setNeedsPasswordSetup] = useState(false)
 
   useEffect(() => {
-    // Detect Supabase invite or password-recovery tokens in the URL hash
+    // Detect Supabase invite/recovery tokens in either the hash (implicit flow)
+    // or as ?code= query param (PKCE flow — Supabase default since late 2023)
     const hash = window.location.hash
-    if (hash.includes('type=invite') || hash.includes('type=recovery')) {
+    const params = new URLSearchParams(window.location.search)
+    const isInviteOrRecovery =
+      hash.includes('type=invite') ||
+      hash.includes('type=recovery') ||
+      params.has('code')  // PKCE: invite + recovery both arrive as ?code=
+
+    if (isInviteOrRecovery) {
       setNeedsPasswordSetup(true)
     }
 
@@ -28,7 +35,7 @@ export default function App() {
 
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session ?? null)
-      // PASSWORD_RECOVERY fires when the user follows a "reset password" email link
+      // PASSWORD_RECOVERY fires for reset-password links (implicit flow)
       if (event === 'PASSWORD_RECOVERY') {
         setNeedsPasswordSetup(true)
       }
