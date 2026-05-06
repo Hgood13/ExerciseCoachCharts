@@ -7,7 +7,7 @@ export default function AddClientPage() {
   const navigate = useNavigate()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [phone, setPhone] = useState('')
+  const [pin, setPin] = useState('')
   const [goals, setGoals] = useState('')
   const [injuries, setInjuries] = useState('')
   const [protocol, setProtocol] = useState('')
@@ -22,15 +22,10 @@ export default function AddClientPage() {
     try {
       const fullName = `${firstName.trim()} ${lastName.trim()}`
 
-      // Derive PIN from last 4 digits of phone number
-      const digitsOnly = phone.replace(/\D/g, '')
-      const pin = digitsOnly.slice(-4)
-
       // Create the client in the DB
       const newClient = await createClient({
         name: fullName,
         pin,
-        phone_number: phone.trim(),
         goals: goals.trim(),
         injuries: injuries.trim(),
         protocol: protocol.trim(),
@@ -87,13 +82,15 @@ export default function AddClientPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">Phone Number <span style={{ fontWeight: 'normal', fontSize: '0.875rem', color: '#666' }}>— Last four digits will be client's PIN</span></label>
+            <label htmlFor="pin">PIN</label>
             <input
-              type="tel"
-              id="phone"
-              placeholder="Ex. 480-222-6345"
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
+              type="text"
+              id="pin"
+              placeholder="4-digit PIN"
+              value={pin}
+              onChange={e => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+              maxLength={4}
+              pattern="\d{4}"
               required
             />
           </div>
