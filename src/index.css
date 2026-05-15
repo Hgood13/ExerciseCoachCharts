@@ -489,6 +489,16 @@ li a:hover {
   position: relative;
 }
 
+.header-input {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: inherit;
+  font: inherit;
+  padding: 2px 4px;
+  border-radius: 3px;
+  width: auto;
+}
+
 .workout-grid {
   display: grid;
   grid-template-columns: repeat(16, 80px);

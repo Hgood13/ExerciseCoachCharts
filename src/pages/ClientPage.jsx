@@ -29,6 +29,8 @@ export default function ClientPage() {
   const [recordNumber, setRecordNumber] = useState(1)
   const [saveMessage, setSaveMessage] = useState('')
   const [mode, setMode] = useState('view') // 'view' | 'create' | 'edit-routine'
+  const [editName, setEditName] = useState('')
+  const [editPin, setEditPin] = useState('')
   const [autoSaveStatus, setAutoSaveStatus] = useState('') // '' | 'saving' | 'saved' | 'error'
   const workoutGridRef = useRef(null)
   const routineGridRef = useRef(null)
@@ -181,11 +183,16 @@ export default function ClientPage() {
 
       const { exercises } = routineGridRef.current.getData()
 
-      await saveChartData(currentChart.id, { exercises })
+      await Promise.all([
+        saveChartData(currentChart.id, { exercises }),
+        updateClient(clientId, { name: editName, pin: editPin })
+      ])
 
       // Update local state
       setClient(prev => ({
         ...prev,
+        name: editName,
+        pin: editPin,
         charts: prev.charts.map(c =>
           c.id === currentChart.id
             ? { ...c, chart_exercises: exercises.map(e => ({ chart_id: c.id, ...e })) }
@@ -279,8 +286,8 @@ export default function ClientPage() {
           <div className="workout-header">
             <span>The Exercise Coach</span>
             <span>Edit Routine — Record #{recordNumber}</span>
-            <span>PIN: {client.pin}</span>
-            <span>{client.name}</span>
+            <span>PIN: <input value={editPin} onChange={e => setEditPin(e.target.value)} className="header-input" /></span>
+            <span><input value={editName} onChange={e => setEditName(e.target.value)} className="header-input" /></span>
           </div>
           <div className="create-chart-layout">
             <RoutineGrid
@@ -329,13 +336,17 @@ export default function ClientPage() {
                     exercisesToLoad = parsed.rows || []
                   } catch { exercisesToLoad = [] }
                 }
+                setEditName(client.name)
+                setEditPin(client.pin)
                 setMode('edit-routine')
                 setTimeout(() => routineGridRef.current?.loadExercises(exercisesToLoad), 0)
               } else {
+                setEditName(client.name)
+                setEditPin(client.pin)
                 setMode('edit-routine')
               }
             }}>
-              Edit Routine
+              Edit Routine or Chart
             </button>
             <button className="btn-secondary" onClick={async () => {
               const newRecordNumber = (client.charts?.length > 0
